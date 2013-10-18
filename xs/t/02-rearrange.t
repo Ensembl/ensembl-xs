@@ -3,7 +3,7 @@ use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 19;
+use Test::More tests => 22;
 
 BEGIN { use_ok('Bio::EnsEMBL::XS'); }
 
