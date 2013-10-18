@@ -58,7 +58,7 @@ rearrange(...)
 	/*      XSRETURN_UNDEF; */
 	/* } */
 	if(items < 2) {
-	     croak("missing arguments");
+	     XSRETURN_UNDEF; /*croak("missing arguments");*/
 	}
 	
 	/* put in PREINIT? */
