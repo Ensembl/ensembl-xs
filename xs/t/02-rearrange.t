@@ -3,7 +3,7 @@ use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 22;
+use Test::More tests => 19;
 
 BEGIN { use_ok('Bio::EnsEMBL::XS'); }
 
@@ -13,15 +13,15 @@ BEGIN { use_ok('Bio::EnsEMBL::XS'); }
 # throws_ok doesn't catch the exception
 # throws_ok { &Bio::EnsEMBL::XS::Utils::Argument::rearrange() }
 #   qr/missing argument/, 'call without arguments';
-my $test_name = 'call without arguments';
-eval { &Bio::EnsEMBL::XS::Utils::Argument::rearrange() };
-if ($@) { ok($@ =~ 'missing arguments', $test_name); } else { ok(0, $test_name); }
+# my $test_name = 'call without arguments';
+# eval { &Bio::EnsEMBL::XS::Utils::Argument::rearrange() };
+# if ($@) { ok($@ =~ 'missing arguments', $test_name); } else { ok(0, $test_name); }
 
-$test_name = 'call with not enough arguments';
-eval { &Bio::EnsEMBL::XS::Utils::Argument::rearrange([]) };
-if ($@) { ok($@ =~ 'missing arguments', $test_name); } else { ok(0, $test_name); }
+# $test_name = 'call with not enough arguments';
+# eval { &Bio::EnsEMBL::XS::Utils::Argument::rearrange([]) };
+# if ($@) { ok($@ =~ 'missing arguments', $test_name); } else { ok(0, $test_name); }
 
-$test_name = 'first argument is array_ref';
+my $test_name = 'first argument is array_ref';
 eval { &Bio::EnsEMBL::XS::Utils::Argument::rearrange(1, 2) };
 if ($@) { ok($@ =~ 'array ref', $test_name); } else { ok(0, $test_name); }
 
@@ -101,11 +101,15 @@ is($no_cache, undef, 'argument: no_cache');
 is($dbname, 'test_db_circ_core', 'argument: dbname');
 
 my $keys = [qw/one two three four five six seven eight nine ten/];
-my @two_output = Bio::EnsEMBL::XS::Utils::Argument::rearrange($keys, (-SIX => 6, -THrEE => 3));
-ok($two_output[0] == 3 && $two_output[1] == 6, 'two output list');
+my @output = Bio::EnsEMBL::XS::Utils::Argument::rearrange($keys, (-SIX => 6, -THrEE => 3));
+ok(!$output[0] && !$output[1] && $output[2] == 3 && !$output[3] 
+   && !$output[4] && $output[5] == 6 && !$output[6] && !$output[7]
+   && !$output[8] && !$output[9], 'two argument list');
 
-my @six_output = Bio::EnsEMBL::XS::Utils::Argument::rearrange($keys, (-SIX => 6, -THREE => 3, -ten => 10, -four => 4, -ONE => 1, -TWO => 2));
-ok($six_output[0] == 1 && $six_output[1] == 2 && $six_output[2] == 3 && $six_output[3] == 4 && $six_output[4] == 6 && $six_output[5] == 10, 'six output list');
+@output = Bio::EnsEMBL::XS::Utils::Argument::rearrange($keys, (-SIX => 6, -THREE => 3, -ten => 10, -four => 4, -ONE => 1, -TWO => 2));
+ok($output[0] == 1 && $output[1] == 2 && $output[2] == 3 && $output[3] == 4 
+   && !$output[4] && $output[5] == 6 && !$output[6] && !$output[7]
+   && !$output[8] && $output[9] == 10, 'six argument list');
 
 # test with large artificial argument list
 SKIP: {
