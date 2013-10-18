@@ -1,5 +1,6 @@
 Revision history for Bio-EnsEMBL-XS
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+1.0.0	 Fri Oct 18 14:58:22 BST 2013
+	 First version. Implements in C the rearrange method of
+	 module Bio::EnsEMBL::Utils::Argument.
 
