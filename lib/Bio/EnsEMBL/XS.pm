@@ -14,23 +14,57 @@ Version 1.0
 
 =cut
 
-our $VERSION = 1.0; # has to be set to number otherwise DynaLoader complains
+our $VERSION = 1.0; 
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+Efficient implementations of Ensembl API routines and methods in C.
 
-Perhaps a little code snippet.
+    # First (not recommended) mode of operation, i.e. directly use 
+    # the fast reimplementation of Bio::EnsEMBL::Utils::Argument::rearrange, 
+    # e.g.
 
     use Bio::EnsEMBL::XS;
 
-    my $foo = Bio::EnsEMBL::XS->new();
-    ...
+    my ($one, $two, $three) = 
+      Bio::EnsEMBL::XS::Utils::Argument::rearrange(['one','tWO','THRee'], 
+                                                   ('-TwO' => 2,
+                                                    '-oNE' => 1,
+                                                    '-THreE' => 3));
 
-=head1 EXPORT
+    # Second (recommended) mode of operation, i.e. import the original 
+    # module which will then detect whether Bio::EnsEMBL::XS is installed and
+    # use its reimplementation instead, e.g.
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+    use Bio::EnsEMBL::Utils::Argument;
+
+    # use Bio::EnsEMBL::XS::Utils::Argument::rearrage if Bio::EnsEMBL is installed
+    my ($one, $two, $three) = rearrange(['one','tWO','THRee'], 
+                                        ('-TwO' => 2,
+                                         '-oNE' => 1,
+                                         '-THreE' => 3));
+    
+
+=head1 DESCRIPTION
+
+The Bio::EnsEMBL::XS module only exists to provide dynamic loading of 
+all compiled and installed extensions written for specific parts of the 
+Ensembl API.
+
+The namespace is organised to closely mirror that of the original Ensembl
+API, with the difference of an extra 'XS' put between 'Bio::EnsEMBL' and
+what would appear as the rest in the original module namespace, e.g. 
+'Utils::Argument'.
+
+The module supports two modes of operation. In the first one, you import 
+Bio::EnsEMBL::XS and then directly call the optimised version of a method.
+The second mode is designed to be the most transparent and hence the 
+preferred way. You just import the original module, which will then detect 
+whether Bio::EnsEMBL::XS has been installed in the system and use the 
+corresponding optimised version of the module's method.
+
+The first release features one fast reimplementation of the method rearrange
+of module Bio::EnsEMBL::Argument.
 
 =cut 
 
@@ -54,10 +88,6 @@ Alessandro Vullo, C<< <avullo at ebi.ac.uk> >>
 No known bugs at the moment. Development in progress.
 
 =head1 SUPPORT
-
-You can find documentation for this module with the perldoc command:
-
-  perldoc Bio::EnsEMBL::XS
 
 Please email comments or questions to the public Ensembl
 developers list at <dev@ensembl.org>.
