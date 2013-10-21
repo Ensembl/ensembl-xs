@@ -24,20 +24,6 @@ extern "C" {
 }
 #endif
 
-#include <string.h>
-#include <stdio.h>
-
-/* void to_upper_case(char* str) { */
-/*      char *p = str; */
-/*      while(*p != '\0') { */
-/*            *p = toupper(*p); */
-/* 	   p++; */
-/*      } */
-/* } */
-
-void simple_test_function(void) {
-     printf("Hello, world!\n");
-}
 
 /*====================================================================
  * XS SECTION                                                     
@@ -47,9 +33,6 @@ MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Argument
 
 PROTOTYPES: DISABLED
 
-void
-simple_test_function()
-
 # void: the return value will be handled directly by the routine rather than the XS compiler
 void 
 rearrange(...)
@@ -58,11 +41,10 @@ rearrange(...)
 	/*      XSRETURN_UNDEF; */
 	/* } */
 	if(items < 2) {
-	     XSRETURN_UNDEF; /*croak("missing arguments");*/
+	     XSRETURN_UNDEF; /* croak("missing arguments"); */
 	}
 	
-	/* put in PREINIT? */
-	int oindex = 0, pindex = 1;
+	int oindex = 0, pindex = 1; /* put in PREINIT?! */
 
 	/* skip object if one provided */
 	if(SvOK(ST(0)) && SvTYPE(ST(0)) == SVt_PV && strEQ(SvPVX(ST(0)), "Bio::EnsEMBL::Utils::Argument")) {
