@@ -140,6 +140,40 @@ check_ref(ref, expected)
   SV* ref
   SV* expected
   CODE:
-    RETVAL = 0;	
+    RETVAL = 0;
+
+    if(SvTYPE(expected) == SVt_NULL) {
+      croak("No expected type given");
+    } else if(!(SvOK(expected) && SvTYPE(expected) == SVt_PV)) {
+      croak("Expected type should be a string");
+    }
+
+    if(SvTYPE(ref) != SVt_NULL) {
+      if(sv_isobject(ref) && 
+         sv_derived_from(ref, (char*)SvPV_nolen(expected))) {
+        RETVAL = 1;
+      } else if(SvROK(ref)) {
+      	switch (SvTYPE(SvRV(ref))) {
+	  case SVt_PVAV:
+	    if(strEQ(SvPVX(expected), "ARRAY"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVHV:
+	    if(strEQ(SvPVX(expected), "HASH"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVCV:
+	    if(strEQ(SvPVX(expected), "CODE"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVGV:
+	    if(strEQ(SvPVX(expected), "GLOB"))
+	      RETVAL = 1;
+	    break;
+	  default:
+	    break;
+	}
+      }
+    }
   OUTPUT:
     RETVAL
