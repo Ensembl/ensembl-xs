@@ -5,6 +5,6 @@ WriteMakefile(
     'C'        => [ qw( Bio-EnsEMBL.c ) ],
     'XS'       => { 'Bio-EnsEMBL.xs' => 'Bio-EnsEMBL.c' },
     'OBJECT'   => 'Bio-EnsEMBL.o',
-    'VERSION'  => 1.0, # has to be set (to number), otherwise XSLoader complains
+    'VERSION'  => 1.1, # has to be set (to number), otherwise XSLoader complains
     'NORECURS' => 1,
 );
