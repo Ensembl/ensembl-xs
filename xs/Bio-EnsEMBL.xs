@@ -132,3 +132,14 @@ rearrange(...)
 	SvREFCNT_dec((SV*)params); /* otherwise memory leak */
 	
 	XSRETURN(j);
+
+MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Scalar
+
+IV
+check_ref(ref, expected)
+  SV* ref
+  SV* expected
+  CODE:
+    RETVAL = 0;	
+  OUTPUT:
+    RETVAL
