@@ -154,34 +154,35 @@ check_ref(ref,expected)
          sv_derived_from(ref, (char*)SvPV_nolen(expected))) {
         RETVAL = 1;
       } else if(SvROK(ref)) {
-      /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
+        /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
+      	char* e = SvPVX(expected);
       	switch (SvTYPE(SvRV(ref))) {
 	  case SVt_PVAV:
-	    if(strEQ(SvPVX(expected), "ARRAY"))
+	    if(strEQ(e, "ARRAY"))
 	      RETVAL = 1;
 	    break;
 	  case SVt_PVHV:
-	    if(strEQ(SvPVX(expected), "HASH"))
+	    if(strEQ(e, "HASH"))
 	      RETVAL = 1;
 	    break;
 	  case SVt_PVCV:
-	    if(strEQ(SvPVX(expected), "CODE"))
+	    if(strEQ(e, "CODE"))
 	      RETVAL = 1;
 	    break;
 	  case SVt_PVGV:
-	    if(strEQ(SvPVX(expected), "GLOB"))
+	    if(strEQ(e, "GLOB"))
 	      RETVAL = 1;
 	    break;
 	  case SVt_REGEXP:
-	    if(strEQ(SvPVX(expected), "Regexp"))
+	    if(strEQ(e, "Regexp"))
 	      RETVAL = 1;
 	    break;
 	  case SVt_PVIO:
-	    if(strEQ(SvPVX(expected), "IO"))
+	    if(strEQ(e, "IO"))
 	      RETVAL = 1;
 	    break;
 	  case SVt_PVFM:
-	    if(strEQ(SvPVX(expected), "FORMAT"))
+	    if(strEQ(e, "FORMAT"))
 	      RETVAL = 1;
 	    break;	    
 	  default:
