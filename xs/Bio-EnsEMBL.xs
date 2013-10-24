@@ -192,3 +192,64 @@ check_ref(ref,expected)
     }
   OUTPUT:
     RETVAL
+
+IV
+assert_ref(ref,expected,attribute_name="-Unknown-")
+  SV* ref
+  SV* expected
+  char* attribute_name
+  CODE:
+    RETVAL = 1;
+
+    if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
+      XSRETURN_YES;
+
+    if(SvTYPE(ref) == SVt_NULL) {
+      croak("The given reference for attribute %s was undef", attribute_name);
+    } 
+    if(SvTYPE(expected) == SVt_NULL) {
+      croak("No expected type given");
+    } else if(!(SvOK(expected) && SvTYPE(expected) == SVt_PV)) {
+      croak("Expected type should be a string");
+    }
+    
+    if(!SvROK(ref)) 
+      croak("Asking for the type of the attribute %s produced no type; check it is a reference", attribute_name);
+
+    char* class;
+    switch (SvTYPE(SvRV(ref))) {
+      case SVt_PVAV:
+        class = "ARRAY";
+	break;
+      case SVt_PVHV:
+        class = "HASH";
+        break;
+      case SVt_PVCV:
+        class = "CODE";
+        break;
+      case SVt_PVGV:
+        class = "GLOB";
+        break;
+      case SVt_REGEXP:
+        class = "Regexp";
+	break;
+      case SVt_PVIO:
+        class = "IO";
+        break;
+      case SVt_PVFM:
+        class = "FORMAT";
+        break;	    
+      default:
+        break;
+    }
+    
+    if(sv_isobject(ref)) { 
+       if(!sv_derived_from(ref, expected))
+         croak("%s's type '%s' is not an ISA of '%s'", attribute_name, class, (char*)SvPV_nolen(expected));
+    } else {
+      if(!strEQ(SvPVX(expected), class))
+        croak("%s was expected to be '%s' but was '%s'", attribute_name, (char*)SvPV_nolen(expected), class);
+    }
+
+  OUTPUT:
+    RETVAL    
