@@ -24,7 +24,6 @@ extern "C" {
 }
 #endif
 
-
 /*====================================================================
  * XS SECTION                                                     
  *====================================================================*/
@@ -33,7 +32,6 @@ MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Argument
 
 PROTOTYPES: DISABLED
 
-# void: the return value will be handled directly by the routine rather than the XS compiler
 void 
 rearrange(...)
   INIT:
@@ -133,17 +131,20 @@ rearrange(...)
 	
 	XSRETURN(j);
 
+
 MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Scalar
 
+PROTOTYPES: DISABLED
+
 IV
-check_ref(ref, expected)
+check_ref(ref,expected)
   SV* ref
   SV* expected
   CODE:
     RETVAL = 0;
 
     if(SvTYPE(expected) == SVt_NULL) {
-      croak("No expected type given");
+      croak("Undefined expected type");
     } else if(!(SvOK(expected) && SvTYPE(expected) == SVt_PV)) {
       croak("Expected type should be a string");
     }
