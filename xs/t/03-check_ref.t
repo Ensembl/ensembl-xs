@@ -44,9 +44,8 @@ my $re = qr/^hello, world/;
 ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($re, 'Regexp'), 'regexp');
 is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'Regexp'), 0, 'not regexp');
 
-# I/O objects?!
-# ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($re, 'IO'), 'io');
-# is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'IO'), 0, 'not io');
+# TODO
+# test I/O objects and FORMAT types
 
 SKIP: {
   skip 'Cannot continue testing: Bio::EnsEMBL::[Slice|CoordSystem] module not found', 1
