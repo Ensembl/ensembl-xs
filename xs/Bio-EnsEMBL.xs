@@ -157,6 +157,10 @@ check_ref(ref,expected)
         /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
       	char* e = SvPVX(expected);
       	switch (SvTYPE(SvRV(ref))) {
+	  case SVt_RV:
+	    if(strEQ(e, "SCALAR"))
+	      RETVAL = 1;
+	    break;
 	  case SVt_PVAV:
 	    if(strEQ(e, "ARRAY"))
 	      RETVAL = 1;
@@ -218,6 +222,9 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
 
     char* class;
     switch (SvTYPE(SvRV(ref))) {
+      case SVt_RV:
+        class = "SCALAR";
+	break;
       case SVt_PVAV:
         class = "ARRAY";
 	break;
