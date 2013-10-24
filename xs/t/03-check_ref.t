@@ -40,6 +40,14 @@ my $fh = tempfile(); #open my $fh, "<03-check_ref.t" or die "Cannot open file fo
 ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($fh, 'GLOB'), 'glob');
 is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'GLOB'), 0, 'not glob');
 
+my $re = qr/^hello, world/;
+ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($re, 'Regexp'), 'regexp');
+is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'Regexp'), 0, 'not regexp');
+
+# I/O objects?!
+# ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($re, 'IO'), 'io');
+# is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'IO'), 0, 'not io');
+
 SKIP: {
   skip 'Cannot continue testing: Bio::EnsEMBL::[Slice|CoordSystem] module not found', 1
     unless eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 };
