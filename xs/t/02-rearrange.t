@@ -3,7 +3,7 @@ use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 22;
+use Test::More; 
 
 BEGIN { use_ok('Bio::EnsEMBL::XS'); }
 
@@ -129,3 +129,7 @@ SKIP: {
 
   is_deeply(\@args, \@args1, 'call with 1M randomly shuffled arguments');
 }
+
+diag( "Testing rearrange in Bio::EnsEMBL::XS::Utils::Argument $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
+
+done_testing();
