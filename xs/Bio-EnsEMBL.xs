@@ -154,6 +154,7 @@ check_ref(ref,expected)
          sv_derived_from(ref, (char*)SvPV_nolen(expected))) {
         RETVAL = 1;
       } else if(SvROK(ref)) {
+      /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
       	switch (SvTYPE(SvRV(ref))) {
 	  case SVt_PVAV:
 	    if(strEQ(SvPVX(expected), "ARRAY"))
@@ -171,6 +172,18 @@ check_ref(ref,expected)
 	    if(strEQ(SvPVX(expected), "GLOB"))
 	      RETVAL = 1;
 	    break;
+	  case SVt_REGEXP:
+	    if(strEQ(SvPVX(expected), "Regexp"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVIO:
+	    if(strEQ(SvPVX(expected), "IO"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVFM:
+	    if(strEQ(SvPVX(expected), "FORMAT"))
+	      RETVAL = 1;
+	    break;	    
 	  default:
 	    break;
 	}
