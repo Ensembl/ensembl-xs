@@ -10,7 +10,7 @@ Bio::EnsEMBL::XS - C extensions of the Ensembl API
 
 =head1 VERSION
 
-Version 1.0
+Version 1.1
 
 =cut
 
