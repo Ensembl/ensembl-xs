@@ -26,7 +26,7 @@ $| = 1;
 #
 print '-' x 30, "\n Call 1K times with array_ref\n", '-' x 30, "\n\n";
 
-print "[Bio::EnsEMBL::Utils::Argument] ";
+print "[Bio::EnsEMBL::Utils::Scalar] ";
 my $i = 1;
 my $start = new Benchmark;
 for (1 .. 1000) {
@@ -38,7 +38,7 @@ my $end = new Benchmark;
 my $diff = timediff($end, $start);
 printf "\nTime taken was %s seconds\n\n", timestr($diff, 'all');
 
-print "[Bio::EnsEMBL::XS::Utils::Argument] ";
+print "[Bio::EnsEMBL::XS::Utils::Scalar] ";
 $i = 1;
 $start = new Benchmark;
 for (1 .. 1000) {
@@ -52,7 +52,7 @@ printf "\nTime taken was %s seconds\n\n", timestr($diff, 'all');
 
 print '-' x 32, "\n Call 100K times with array_ref\n", '-' x 32, "\n\n";
 
-print "[Bio::EnsEMBL::Utils::Argument] ";
+print "[Bio::EnsEMBL::Utils::Scalar] ";
 $i = 1;
 $start = new Benchmark;
 for (1 .. 100000) {
@@ -64,7 +64,7 @@ $end = new Benchmark;
 $diff = timediff($end, $start);
 printf "\nTime taken was %s seconds\n\n", timestr($diff, 'all');
 
-print "[Bio::EnsEMBL::XS::Utils::Argument] ";
+print "[Bio::EnsEMBL::XS::Utils::Scalar] ";
 $i = 1;
 $start = new Benchmark;
 for (1 .. 100000) {
@@ -96,7 +96,7 @@ if (eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 }) 
 
   print '-' x 27, "\n Call 1K times with object\n", '-' x 27, "\n\n";
 
-  print "[Bio::EnsEMBL::Utils::Argument] ";
+  print "[Bio::EnsEMBL::Utils::Scalar] ";
   my $i = 1;
   my $start = new Benchmark;
   for (1 .. 1000) {
@@ -108,7 +108,7 @@ if (eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 }) 
   my $diff = timediff($end, $start);
   printf "\nTime taken was %s seconds\n\n", timestr($diff, 'all');
 
-  print "[Bio::EnsEMBL::XS::Utils::Argument] ";
+  print "[Bio::EnsEMBL::XS::Utils::Scalar] ";
   $i = 1;
   $start = new Benchmark;
   for (1 .. 1000) {
@@ -122,7 +122,7 @@ if (eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 }) 
 
   print '-' x 29, "\n Call 100K times with object\n", '-' x 29, "\n\n";
 
-  print "[Bio::EnsEMBL::Utils::Argument] ";
+  print "[Bio::EnsEMBL::Utils::Scalar] ";
   $i = 1;
   $start = new Benchmark;
   for (1 .. 100000) {
@@ -134,7 +134,7 @@ if (eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 }) 
   $diff = timediff($end, $start);
   printf "\nTime taken was %s seconds\n\n", timestr($diff, 'all');
 
-  print "[Bio::EnsEMBL::XS::Utils::Argument] ";
+  print "[Bio::EnsEMBL::XS::Utils::Scalar] ";
   $i = 1;
   $start = new Benchmark;
   for (1 .. 100000) {
