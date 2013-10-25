@@ -26,6 +26,11 @@ if ($@) { ok($@ =~ 'string', $test_name); } else { ok(0, $test_name); }
 #
 # Test normal mode of operation
 #
+my $a = 10;
+my $b = \$a;
+ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($b, 'SCALAR'), 'scalar');
+is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref({a=>1,b=>2}, 'SCALAR'), 0, 'not scalar');
+
 ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'ARRAY'), 'array');
 is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref({a=>1,b=>2}, 'ARRAY'), 0, 'not array');
 is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref(1, 'ARRAY'), 0, 'not array');
