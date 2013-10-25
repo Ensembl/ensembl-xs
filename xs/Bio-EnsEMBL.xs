@@ -157,10 +157,6 @@ check_ref(ref,expected)
         /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
       	char* e = SvPVX(expected);
       	switch (SvTYPE(SvRV(ref))) {
-	  case SVt_RV:
-	    if(strEQ(e, "SCALAR"))
-	      RETVAL = 1;
-	    break;
 	  case SVt_PVAV:
 	    if(strEQ(e, "ARRAY"))
 	      RETVAL = 1;
@@ -187,6 +183,16 @@ check_ref(ref,expected)
 	    break;
 	  case SVt_PVFM:
 	    if(strEQ(e, "FORMAT"))
+	      RETVAL = 1;
+	    break;
+	  /* handle the reference to scalar case */
+	  case SVt_IV:
+	  case SVt_NV:
+	  case SVt_PV:
+	  case SVt_PVIV:
+	  case SVt_PVNV:
+	  case SVt_PVMG:
+	    if(strEQ(e, "SCALAR"))
 	      RETVAL = 1;
 	    break;	    
 	  default:
