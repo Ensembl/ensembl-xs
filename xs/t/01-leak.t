@@ -4,7 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-use Test::More HAS_LEAKTRACE ? (tests => 3) : (skip_all => 'require Test::LeakTrace');
+use Test::More HAS_LEAKTRACE ? (tests => 4) : (skip_all => 'require Test::LeakTrace');
 use Test::LeakTrace;
 
 BEGIN { use_ok('Bio::EnsEMBL::XS'); }
