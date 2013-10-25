@@ -150,9 +150,9 @@ check_ref(ref,expected)
     }
 
     if(SvTYPE(ref) != SVt_NULL) {
-      if(sv_isobject(ref) && 
-         sv_derived_from(ref, (char*)SvPV_nolen(expected))) {
-        RETVAL = 1;
+      if(sv_isobject(ref)) {  
+         if(sv_derived_from(ref, (char*)SvPV_nolen(expected)))
+           RETVAL = 1;
       } else if(SvROK(ref)) {
         /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
       	char* e = SvPVX(expected);
