@@ -19,7 +19,13 @@ no_leaks_ok {
 
 no_leaks_ok {
   my ($is_array) = 
-    Bio::EnsEMBL::XS::Utils::Scalar::check_ref(['one','tWO','THRee'], 'ARRAY');
+    Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'ARRAY');
 } 'Bio::EnsEMBL::XS::Utils::check_ref';
+
+$Bio::EnsEMBL::Utils::Scalar::ASSERTIONS = 1;
+no_leaks_ok {
+  my $is_array = 
+    eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref({a=>1,b=>2,c=>3}, 'ARRAY'); }
+} 'Bio::EnsEMBL::XS::Utils::assert_ref';
 
 diag( "Testing memory leaking Bio::EnsEMBL::XS $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
