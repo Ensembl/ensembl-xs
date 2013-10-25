@@ -58,6 +58,35 @@ $test_name = 'not code';
 eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref([1,2,3], 'CODE') };
 if ($@) { ok($@ =~ 'was expected to be', $test_name); } else { ok(0, $test_name); }
 
+# TODO
+# test I/O objects and FORMAT types
+
+SKIP: {
+  skip 'Cannot continue testing: Bio::EnsEMBL::[Slice|CoordSystem] module not found', 1
+    unless eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 };
+
+  my $test_coord_system = Bio::EnsEMBL::CoordSystem->new(-NAME    => 'chromosome',
+							 -VERSION => 'NCBI33',
+							 -DBID    => 1,
+							 -TOP_LEVEL => 0,
+							 -RANK    => 1,
+							 -SEQUENCE_LEVEL => 0,
+							 -DEFAULT => 1);
+  my $test_slice = Bio::EnsEMBL::Slice->new(-seq_region_name => 'test',
+					    -start           => 1,
+					    -end             => 3,
+					    -coord_system    => $test_coord_system);
+  ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($test_slice, 'Bio::EnsEMBL::Slice'), 'Bio::EnsEMBL::Slice');
+  $test_name = 'not Bio::EnsEMBL::CoordSystem';
+  eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($test_slice, 'Bio::EnsEMBL::CoordSystem') };
+  if ($@) { ok($@ =~ 'is not an ISA', $test_name); } else { ok(0, $test_name); }
+  
+  ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($test_coord_system, 'Bio::EnsEMBL::CoordSystem'), 'Bio::EnsEMBL::CoordSystem');
+  $test_name = 'not Bio::EnsEMBL::Slice';
+  eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($test_coord_system, 'Bio::EnsEMBL::Slice') };
+  if ($@) { ok($@ =~ 'is not an ISA', $test_name); } else { ok(0, $test_name); }  
+}
+
 diag( "Testing assert_ref in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
 done_testing();
