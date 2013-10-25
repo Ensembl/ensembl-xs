@@ -223,14 +223,13 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
       croak("Expected type should be a string");
     }
     
-    if(!SvROK(ref)) 
+    if(!SvROK(ref))
+      /* msg is not exactly what we've done, but the
+         end result is the same */ 
       croak("Asking for the type of the attribute %s produced no type; check it is a reference", attribute_name);
 
     char* class;
     switch (SvTYPE(SvRV(ref))) {
-      case SVt_RV:
-        class = "SCALAR";
-	break;
       case SVt_PVAV:
         class = "ARRAY";
 	break;
@@ -251,7 +250,16 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
         break;
       case SVt_PVFM:
         class = "FORMAT";
-        break;	    
+        break;
+      /* handle the reference to scalar case */
+      case SVt_IV:
+      case SVt_NV:
+      case SVt_PV:
+      case SVt_PVIV:
+      case SVt_PVNV:
+      case SVt_PVMG:
+        class = "SCALAR";
+	break;	    	    
       default:
         break;
     }
