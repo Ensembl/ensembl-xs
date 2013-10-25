@@ -37,6 +37,12 @@ if ($@) { ok($@ =~ 'Asking for the type', $test_name); } else { ok(0, $test_name
 #
 # Test normal mode of operation
 #
+my $a = 10;
+ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(\$a, 'SCALAR'), 'scalar');
+$test_name = 'not scalar';
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref({a=>1,b=>2}, 'SCALAR') };
+if ($@) { ok($@ =~ 'was expected to be', $test_name); } else { ok(0, $test_name); }
+
 ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_ref([1,2,3], 'ARRAY'), 'array');
 $test_name = 'not array';
 eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref({a=>1,b=>2}, 'ARRAY') };
@@ -47,7 +53,10 @@ $test_name = 'not hash';
 eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref([1,2,3], 'HASH') };
 if ($@) { ok($@ =~ 'was expected to be', $test_name); } else { ok(0, $test_name); }
 
-
+ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(sub { my $a = shift}, 'CODE'), 'code');
+$test_name = 'not code';
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref([1,2,3], 'CODE') };
+if ($@) { ok($@ =~ 'was expected to be', $test_name); } else { ok(0, $test_name); }
 
 diag( "Testing assert_ref in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
