@@ -227,47 +227,47 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
       /* msg is not exactly what we've done, but the
          end result is the same */ 
       croak("Asking for the type of the attribute %s produced no type; check it is a reference", attribute_name);
-
-    char* class;
-    switch (SvTYPE(SvRV(ref))) {
-      case SVt_PVAV:
-        class = "ARRAY";
-	break;
-      case SVt_PVHV:
-        class = "HASH";
-        break;
-      case SVt_PVCV:
-        class = "CODE";
-        break;
-      case SVt_PVGV:
-        class = "GLOB";
-        break;
-      case SVt_REGEXP:
-        class = "Regexp";
-	break;
-      case SVt_PVIO:
-        class = "IO";
-        break;
-      case SVt_PVFM:
-        class = "FORMAT";
-        break;
-      /* handle the reference to scalar case */
-      case SVt_IV:
-      case SVt_NV:
-      case SVt_PV:
-      case SVt_PVIV:
-      case SVt_PVNV:
-      case SVt_PVMG:
-        class = "SCALAR";
-	break;	    	    
-      default:
-        break;
-    }
     
     if(sv_isobject(ref)) { 
        if(!sv_derived_from(ref, (char*)SvPV_nolen(expected)))
-         croak("%s's type '%s' is not an ISA of '%s'", attribute_name, class, (char*)SvPV_nolen(expected));
+         croak("%s's type is not an ISA of '%s'", attribute_name, (char*)SvPV_nolen(expected));
     } else {
+      char* class;
+      switch (SvTYPE(SvRV(ref))) {
+        case SVt_PVAV:
+          class = "ARRAY";
+	  break;
+        case SVt_PVHV:
+          class = "HASH";
+          break;
+        case SVt_PVCV:
+          class = "CODE";
+          break;
+        case SVt_PVGV:
+          class = "GLOB";
+          break;
+        case SVt_REGEXP:
+          class = "Regexp";
+	  break;
+        case SVt_PVIO:
+          class = "IO";
+          break;
+        case SVt_PVFM:
+          class = "FORMAT";
+          break;
+        /* handle the reference to scalar case */
+        case SVt_IV:
+        case SVt_NV:
+        case SVt_PV:
+        case SVt_PVIV:
+        case SVt_PVNV:
+        case SVt_PVMG:
+          class = "SCALAR";
+	  break;	    	    
+        default:
+          break;
+      }
+
       if(!strEQ(SvPVX(expected), class))
         croak("%s was expected to be '%s' but was '%s'", attribute_name, (char*)SvPV_nolen(expected), class);
     }
