@@ -265,7 +265,7 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
     }
     
     if(sv_isobject(ref)) { 
-       if(!sv_derived_from(ref, expected))
+       if(!sv_derived_from(ref, (char*)SvPV_nolen(expected)))
          croak("%s's type '%s' is not an ISA of '%s'", attribute_name, class, (char*)SvPV_nolen(expected));
     } else {
       if(!strEQ(SvPVX(expected), class))
