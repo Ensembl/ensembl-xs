@@ -273,4 +273,27 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
     }
 
   OUTPUT:
-    RETVAL    
+    RETVAL
+
+
+IV
+assert_numeric(scalar,attribute_name="-Unknown-")
+  SV* scalar
+  SV* attribute_name
+  CODE:
+    RETVAL = 1;
+
+    if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
+      XSRETURN_YES;
+
+    if(SvTYPE(scalar) == SVt_NULL) {
+      croak("%s attribute is undefined", attribute_name);
+    } else if(sv_isobject(scalar)) { 
+      croak("The given attribute %s is blessed; cannot work with blessed values", attribute_name);
+    } else {
+      if(!looks_like_number(scalar)) 
+        croak("Attribute %s was not a number", attribute_name);
+    }
+
+  OUTPUT:
+    RETVAL
