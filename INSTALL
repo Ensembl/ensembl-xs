@@ -1,0 +1,129 @@
+	
+			    Bio::EnsEMBL::XS
+
+			     Version 1.1.0
+
+			   29th October 2013
+
+        Copyright (c) 2013 The European Bioinformatics Institute and
+	     Genome Research Limited. All rights reserved.
+
+
+OBTAINING THE ENSEMBL API EXTENSIONS
+------------------------------------
+
+The latest version can be obtained by cloning the Sanger internal git repository:
+
+    git clone ssh://git.internal.sanger.ac.uk/repos/git/ensembl/ensembl-xs.git 
+
+
+PREREQUISITES
+-------------
+
+The Ensembl API extensions require an installation of the Ensembl Perl API.
+See http://www.ensembl.org/info/docs/api/api_installation.html for instructions 
+on how to install the API.
+
+Like the Ensembl API, the extensions are designed to run with all perl versions >= 5.8.9.
+
+
+QUICK INSTALL
+-------------
+
+The Ensembl API extensions can be be installed from source code.
+To install the extensions from the command line:
+
+    $ cd ensembl-xs     # assume ensembl-xs is the directory name of the cloned repo
+    $ perl Makefile.PL
+    $ make
+    $ make test
+    $ make install      # may need root access
+
+After the installation, the user may continue to use the Ensembl API as usual, since
+this will now automatically detect the availability of the extensions and use them where
+appropriate. 
+
+
+BUILDING AND TESTING
+--------------------
+
+This section describes the "make" and "make test" commands which build
+and test the Ensembl API extensions.  If you ran these without incident,
+then you can probably skip this section.
+
+The 'make' command will build the extensions modules in the 
+usual manner.  
+
+    make
+
+The 'make test' command runs the test scripts in the 'xs/t' subdirectory.
+
+    make test
+
+
+BENCHMARKING
+------------
+
+The 'bin/' directory of the distribution contains a bunch of perl scripts which compare 
+the running time of the original procedures in the Ensembl API and of the corresponding 
+extensions. 
+
+Each script runs tests for one single procedure, e.g. to benchmark the 'rearrange' method 
+of module Bio::EnsEMBL::Utils::Argument against its reimplementation:
+ 
+    $ cd bin
+    $ perl rearrange-bench.pl
+
+Each script runs the original and optimised version on a set of tasks and for each one 
+it shows a comparison of the running time in the two cases.
+
+
+INSTALLATION
+------------
+
+This section describes the final installation of the Ensembl API extensions
+via the "make install".
+
+The 'make install' will install the modules and scripts on your system.  
+You may need administrator privileges to perform this task.
+
+Alternately you can can install the extensions to a local
+directory (see ExtUtils::MakeMaker for full details), e.g.
+
+    $ perl Makefile.PL PREFIX=/home/user
+
+Don't forget to update your PERL5LIB environment variable if you do
+this, or add a line to your script to tell Perl where to find the files,
+e.g.
+
+    use lib qw( /home/user/lib/perl5/site_perl/5.10.0 );
+
+
+AUTHOR
+------
+
+The module and the extensions have been written by Alessandro Vullo <avullo@ebi.ac.uk>
+with the invaluable assistance of Andy Yates.
+
+
+LICENSE AND COPYRIGHT
+---------------------
+
+Copyright (c) 1999-2013 The European Bioinformatics Institute and
+Genome Research Limited. All rights reserved.
+
+This software is distributed under a modified Apache license.
+For license details, please see
+
+  http://www.ensembl.org/info/about/legal/code_licence.html
+
+Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY THE ENSEMBL GROUP "AS IS" AND 
+ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE ENSEMBL GROUP OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.

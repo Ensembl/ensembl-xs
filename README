@@ -1,85 +1,66 @@
-Bio-EnsEMBL-XS
+	
+			    Bio::EnsEMBL::XS
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+			     Version 1.1.0
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+			   29th October 2013
+
+        Copyright (c) 2013 The European Bioinformatics Institute and
+	     Genome Research Limited. All rights reserved.
 
 
-INSTALLATION
+The Bio::EnsEMBL::XS module uses the Perl XS layer to provide fast re-implementations 
+in C of some procedures of the Ensembl API, written in pure perl. 
 
-To install this module, run the following commands:
+
+QUICK INSTALL
+-------------
+
+To install this module from source code, run the following commands:
 
 	perl Makefile.PL
 	make
 	make test
 	make install
 
+See file INSTALL for more detailed documentation on how to obtain, build, test, 
+install and benchmark the extensions.
+    
+ 
 SUPPORT AND DOCUMENTATION
+-------------------------
 
 After installing, you can find documentation for this module with the
-perldoc command.
+perldoc command:
 
     perldoc Bio::EnsEMBL::XS
 
-You can also look for information at:
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Bio-EnsEMBL-XS
+AUTHOR
+------
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Bio-EnsEMBL-XS
-
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Bio-EnsEMBL-XS
-
-    Search CPAN
-        http://search.cpan.org/dist/Bio-EnsEMBL-XS/
+The module and the extensions have been written by Alessandro Vullo <avullo@ebi.ac.uk>
+with the invaluable assistance of Andy Yates.
 
 
 LICENSE AND COPYRIGHT
+---------------------
 
-Copyright (C) 2013 Alessandro Vullo
+Copyright (c) 1999-2013 The European Bioinformatics Institute and
+Genome Research Limited. All rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
+This software is distributed under a modified Apache license.
+For license details, please see
 
-L<http://www.perlfoundation.org/artistic_license_2_0>
+  http://www.ensembl.org/info/about/legal/code_licence.html
 
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-
-Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
-AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
-YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
-CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY THE ENSEMBL GROUP "AS IS" AND 
+ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE ENSEMBL GROUP OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
