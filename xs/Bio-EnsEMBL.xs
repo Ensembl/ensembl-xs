@@ -288,7 +288,7 @@ assert_numeric(scalar,attribute_name="-Unknown-")
     if(SvTYPE(scalar) == SVt_NULL) {
       croak("%s attribute is undefined", attribute_name);
     } else if(sv_isobject(scalar)) {
-      croak("The given attribute %s is blessed; cannot work with blessed values", attribute_name);
+        croak("The given attribute %s is blessed; cannot work with blessed values", attribute_name);
     } else {
       if(!looks_like_number(scalar))
         croak("Attribute %s was not a number", attribute_name);
@@ -307,24 +307,40 @@ assert_integer(scalar,attribute_name="-Unknown-")
     if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
       XSRETURN_YES;
 
-    /* Call perl subroutines directly from C
-       See http://perldoc.perl.org/perlcall.html */
-    dSP;
+    /*
+       Do not call the perl assert_numeric subroutine from C,
+       as the call represents a significant overhead wrt to 
+       the actual function work.
+       Just reimplement what assert_numeric is doing.
+    */
+	
+    /* /\* Call perl subroutines directly from C */
+    /*    See http://perldoc.perl.org/perlcall.html *\/ */
+    /* dSP; */
     
-    /* Disposing of temporaries would create
-       seg fault, comment it */
-    /* ENTER; */
-    /* SAVETMPS; */
+    /* /\* Disposing of temporaries would create */
+    /*    seg fault, comment it *\/ */
+    /* /\* ENTER; *\/ */
+    /* /\* SAVETMPS; *\/ */
 
-    PUSHMARK(SP);
-    XPUSHs(sv_2mortal(newSVsv(scalar)));
-    XPUSHs(sv_2mortal(newSVpv(attribute_name, 0)));
-    PUTBACK;
+    /* PUSHMARK(SP); */
+    /* XPUSHs(sv_2mortal(newSVsv(scalar))); */
+    /* XPUSHs(sv_2mortal(newSVpv(attribute_name, 0))); */
+    /* PUTBACK; */
     
-    call_pv("Bio::EnsEMBL::Utils::Scalar::assert_numeric_pp", G_DISCARD);
+    /* call_pv("Bio::EnsEMBL::Utils::Scalar::assert_numeric_pp", G_DISCARD); */
 
-    /* FREETMPS; */
-    /* LEAVE; */
+    /* /\* FREETMPS; *\/ */
+    /* /\* LEAVE; *\/ */
+
+    if(SvTYPE(scalar) == SVt_NULL) {
+      croak("%s attribute is undefined", attribute_name);
+    } else if(sv_isobject(scalar)) {
+      croak("The given attribute %s is blessed; cannot work with blessed values", attribute_name);
+    } else {
+      if(!looks_like_number(scalar))
+        croak("Attribute %s was not a number", attribute_name);
+    }
 
     if(SvNOK(scalar) || SvPOK(scalar)) {
       croak("Attribute %s was a number but not an Integer", attribute_name);
