@@ -24,7 +24,6 @@ extern "C" {
 }
 #endif
 
-
 /*====================================================================
  * XS SECTION                                                     
  *====================================================================*/
@@ -33,7 +32,6 @@ MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Argument
 
 PROTOTYPES: DISABLED
 
-# void: the return value will be handled directly by the routine rather than the XS compiler
 void 
 rearrange(...)
   INIT:
@@ -132,3 +130,221 @@ rearrange(...)
 	SvREFCNT_dec((SV*)params); /* otherwise memory leak */
 	
 	XSRETURN(j);
+
+
+MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Scalar
+
+PROTOTYPES: DISABLED
+
+IV
+check_ref(ref,expected)
+  SV* ref
+  SV* expected
+  CODE:
+    RETVAL = 0;
+
+    if(SvTYPE(expected) == SVt_NULL) {
+      croak("Undefined expected type");
+    } else if(!(SvOK(expected) && SvTYPE(expected) == SVt_PV)) {
+      croak("Expected type should be a string");
+    }
+
+    if(SvTYPE(ref) != SVt_NULL) {
+      if(sv_isobject(ref)) {  
+         if(sv_derived_from(ref, (char*)SvPV_nolen(expected)))
+           RETVAL = 1;
+      } else if(SvROK(ref)) {
+        /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
+      	char* e = SvPVX(expected);
+      	switch (SvTYPE(SvRV(ref))) {
+	  case SVt_PVAV:
+	    if(strEQ(e, "ARRAY"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVHV:
+	    if(strEQ(e, "HASH"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVCV:
+	    if(strEQ(e, "CODE"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVGV:
+	    if(strEQ(e, "GLOB"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_REGEXP:
+	    if(strEQ(e, "Regexp"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVIO:
+	    if(strEQ(e, "IO"))
+	      RETVAL = 1;
+	    break;
+	  case SVt_PVFM:
+	    if(strEQ(e, "FORMAT"))
+	      RETVAL = 1;
+	    break;
+	  /* handle the reference to scalar case */
+	  case SVt_IV:
+	  case SVt_NV:
+	  case SVt_PV:
+	  case SVt_PVIV:
+	  case SVt_PVNV:
+	  case SVt_PVMG:
+	    if(strEQ(e, "SCALAR"))
+	      RETVAL = 1;
+	    break;	    
+	  default:
+	    break;
+	}
+      }
+    }
+  OUTPUT:
+    RETVAL
+
+IV
+assert_ref(ref,expected,attribute_name="-Unknown-")
+  SV* ref
+  SV* expected
+  char* attribute_name
+  CODE:
+    RETVAL = 1;
+
+    if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
+      XSRETURN_YES;
+
+    if(SvTYPE(ref) == SVt_NULL) {
+      croak("The given reference for attribute %s was undef", attribute_name);
+    } 
+    if(SvTYPE(expected) == SVt_NULL) {
+      croak("No expected type given");
+    } else if(!(SvOK(expected) && SvTYPE(expected) == SVt_PV)) {
+      croak("Expected type should be a string");
+    }
+    
+    if(!SvROK(ref))
+      /* msg is not exactly what we've done, but the
+         end result is the same */ 
+      croak("Asking for the type of the attribute %s produced no type; check it is a reference", attribute_name);
+    
+    if(sv_isobject(ref)) { 
+       if(!sv_derived_from(ref, (char*)SvPV_nolen(expected)))
+         croak("%s's type is not an ISA of '%s'", attribute_name, (char*)SvPV_nolen(expected));
+    } else {
+      char* class;
+      switch (SvTYPE(SvRV(ref))) {
+        case SVt_PVAV:
+          class = "ARRAY";
+	  break;
+        case SVt_PVHV:
+          class = "HASH";
+          break;
+        case SVt_PVCV:
+          class = "CODE";
+          break;
+        case SVt_PVGV:
+          class = "GLOB";
+          break;
+        case SVt_REGEXP:
+          class = "Regexp";
+	  break;
+        case SVt_PVIO:
+          class = "IO";
+          break;
+        case SVt_PVFM:
+          class = "FORMAT";
+          break;
+        /* handle the reference to scalar case */
+        case SVt_IV:
+        case SVt_NV:
+        case SVt_PV:
+        case SVt_PVIV:
+        case SVt_PVNV:
+        case SVt_PVMG:
+          class = "SCALAR";
+	  break;	    	    
+        default:
+          break;
+      }
+
+      if(!strEQ(SvPVX(expected), class))
+        croak("%s was expected to be '%s' but was '%s'", attribute_name, (char*)SvPV_nolen(expected), class);
+    }
+
+  OUTPUT:
+    RETVAL
+
+IV
+assert_numeric(scalar,attribute_name="-Unknown-")
+  SV* scalar
+  char* attribute_name
+  CODE:
+    RETVAL = 1;
+
+    if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
+      XSRETURN_YES;
+
+    if(SvTYPE(scalar) == SVt_NULL) {
+      croak("%s attribute is undefined", attribute_name);
+    } else if(sv_isobject(scalar)) {
+        croak("The given attribute %s is blessed; cannot work with blessed values", attribute_name);
+    } else {
+      if(!looks_like_number(scalar))
+        croak("Attribute %s was not a number", attribute_name);
+    }
+
+  OUTPUT:
+    RETVAL
+
+IV
+assert_integer(scalar,attribute_name="-Unknown-")
+  SV* scalar
+  char* attribute_name
+  CODE:
+    RETVAL = 1;
+
+    if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
+      XSRETURN_YES;
+
+    /*
+       Do not call the perl assert_numeric subroutine from C,
+       as the call represents a significant overhead wrt to 
+       the actual function work.
+       Just reimplement what assert_numeric is doing.
+    */
+	
+    /* /\* Call perl subroutines directly from C */
+    /*    See http://perldoc.perl.org/perlcall.html *\/ */
+    /* dSP; */
+    
+    /* /\* Disposing of temporaries would create */
+    /*    seg fault, comment it *\/ */
+    /* /\* ENTER; *\/ */
+    /* /\* SAVETMPS; *\/ */
+
+    /* PUSHMARK(SP); */
+    /* XPUSHs(sv_2mortal(newSVsv(scalar))); */
+    /* XPUSHs(sv_2mortal(newSVpv(attribute_name, 0))); */
+    /* PUTBACK; */
+    
+    /* call_pv("Bio::EnsEMBL::Utils::Scalar::assert_numeric_pp", G_DISCARD); */
+
+    /* /\* FREETMPS; *\/ */
+    /* /\* LEAVE; *\/ */
+
+    if(SvTYPE(scalar) == SVt_NULL) {
+      croak("%s attribute is undefined", attribute_name);
+    } else if(sv_isobject(scalar)) {
+      croak("The given attribute %s is blessed; cannot work with blessed values", attribute_name);
+    } else {
+      if(!looks_like_number(scalar))
+        croak("Attribute %s was not a number", attribute_name);
+    }
+
+    if(SvNOK(scalar) || SvPOK(scalar)) {
+      croak("Attribute %s was a number but not an Integer", attribute_name);
+    }
+
+  OUTPUT:
+    RETVAL
