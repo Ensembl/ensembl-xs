@@ -298,8 +298,8 @@ assert_numeric(scalar,attribute_name="-Unknown-")
     RETVAL
 
 IV
-assert_integer(integer,attribute_name="-Unknown-")
-  SV* integer
+assert_integer(scalar,attribute_name="-Unknown-")
+  SV* scalar
   char* attribute_name
   CODE:
     RETVAL = 1;
@@ -307,24 +307,27 @@ assert_integer(integer,attribute_name="-Unknown-")
     if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
       XSRETURN_YES;
 
+    /* Call perl subroutines directly from C
+       See http://perldoc.perl.org/perlcall.html */
     dSP;
     
-    ENTER;
-    SAVETMPS;
+    /* Disposing of temporaries would create
+       seg fault, comment it */
+    /* ENTER; */
+    /* SAVETMPS; */
 
     PUSHMARK(SP);
-    XPUSHs(sv_2mortal(newSVsv(integer)));
+    XPUSHs(sv_2mortal(newSVsv(scalar)));
     XPUSHs(sv_2mortal(newSVpv(attribute_name, 0)));
     PUTBACK;
     
     call_pv("Bio::EnsEMBL::Utils::Scalar::assert_numeric_pp", G_DISCARD);
 
-    FREETMPS;
-    LEAVE;
+    /* FREETMPS; */
+    /* LEAVE; */
 
-    /* extract integer part from SV */
-    if(SvIV(integer) != (int)SvIV(integer)) {
-      croak("Attribute %s was a number but not an Integer");
+    if(SvNOK(scalar) || SvPOK(scalar)) {
+      croak("Attribute %s was a number but not an Integer", attribute_name);
     }
 
   OUTPUT:
