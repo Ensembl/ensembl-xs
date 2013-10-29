@@ -30,12 +30,15 @@ $test_name = 'not a number';
 eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric("test string") };
 if ($@) { ok($@ =~ 'was not a number', $test_name); } else { ok(0, $test_name); }
 
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric([]) };
+if ($@) { ok($@ =~ 'was not a number', $test_name); } else { ok(0, $test_name); }
+
 #
 # Test normal mode of operation
 #
 ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric(123456), "integer");
 ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric(1e-11), "float");
-ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric("2332323"), "stringified integer");
+ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric("123e10"), "stringified integer");
 
 diag( "Testing assert_[numeric|integer] in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
