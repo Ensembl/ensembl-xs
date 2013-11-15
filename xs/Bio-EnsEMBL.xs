@@ -94,7 +94,8 @@ rearrange(...)
 	            croak("argument should be named");
 	      }
 	      /* delete dash and uppercase arg key */
-	      char *key = (char*)SvPV_nolen(ST(i)) + 1; /* add 1 to skip dash */
+	      /*char *key = (char*)SvPV_nolen(ST(i)) + 1;*/ /* add 1 to skip dash */
+	      char *key = savepv(SvPV_nolen(ST(i))) + 1; /* add 1 to skip dash */
 	      char *p = key;
 	      while(*p != '\0') {
 	            *p = toupper(*p);
