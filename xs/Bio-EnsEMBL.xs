@@ -20,6 +20,8 @@ extern "C" {
 /*#include "ppport.h"*/
 #include "XSUB.h"
 
+#include <string.h>
+
 #ifdef __cplusplus
 }
 #endif
@@ -229,9 +231,34 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
          end result is the same */ 
       croak("Asking for the type of the attribute %s produced no type; check it is a reference", attribute_name);
     
+    const char* exp_class_name = (const char*)SvPV_nolen(expected);
+
     if(sv_isobject(ref)) { 
-       if(!sv_derived_from(ref, (char*)SvPV_nolen(expected)))
-         croak("%s's type is not an ISA of '%s'", attribute_name, (char*)SvPV_nolen(expected));
+       const char* ref_class_name = HvNAME(SvSTASH(SvRV(ref)));
+    
+       if(strstr(ref_class_name, "Proxy") != NULL) {
+         /* If the ref is a proxy object (i.e. inherits from Bio::EnsEMBL::Utils::Proxy */
+	 /* The real class to check is that of the proxied object */
+	 /* We can do this by calling the isa method of the proxy object */
+	 dSP;
+	 int count;
+
+	 PUSHMARK(SP);
+	 XPUSHs(sv_2mortal(newSVsv(ref)));
+	 XPUSHs(sv_2mortal(newSVpv(exp_class_name, 0)));
+	 PUTBACK;
+
+	 count = call_method("isa", G_SCALAR);
+	 
+	 SPAGAIN;
+	 
+	 /* Check whether the proxied object is of the expected class */
+	 if(!POPi) /*sv_derived_from(POPi, exp_class_name)) */
+	   croak("%s's type is not an ISA of '%s'", attribute_name, exp_class_name);
+	 PUTBACK;
+
+       } else if(!sv_derived_from(ref, exp_class_name))
+         croak("%s's type (%s) is not an ISA of '%s'", attribute_name, ref_class_name, exp_class_name);
     } else {
       char* class;
       switch (SvTYPE(SvRV(ref))) {
@@ -270,7 +297,7 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
       }
 
       if(!strEQ(SvPVX(expected), class))
-        croak("%s was expected to be '%s' but was '%s'", attribute_name, (char*)SvPV_nolen(expected), class);
+        croak("%s was expected to be '%s' but was '%s'", attribute_name, exp_class_name, class);
     }
 
   OUTPUT:
