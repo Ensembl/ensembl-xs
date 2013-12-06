@@ -52,6 +52,7 @@ is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref([1,2,3], 'Regexp'), 0, 'not regexp
 # TODO
 # test I/O objects and FORMAT types
 
+# Test with EnsEMBL blessed objects
 SKIP: {
   skip 'Cannot continue testing: Bio::EnsEMBL::[Slice|CoordSystem] module not found', 1
     unless eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 };
@@ -70,9 +71,22 @@ SKIP: {
   ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($test_slice, 'Bio::EnsEMBL::Slice'), 'Bio::EnsEMBL::Slice');
   is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($test_slice, 'Bio::EnsEMBL::CoordSystem'), 0, 'slice is not coord sytem');
   ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($test_coord_system, 'Bio::EnsEMBL::CoordSystem'), 'Bio::EnsEMBL::CoordSystem');
-  is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($test_coord_system, 'Bio::EnsEMBL::Slice'), 0, 'coord system is not slice');
-  
+  is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($test_coord_system, 'Bio::EnsEMBL::Slice'), 0, 'coord system is not slice');  
 }
+
+# Test with EnsEMBL proxy objects
+SKIP: {
+  skip 'Cannot continue testing: Bio::EnsEMBL::[DBConnection|ProxyDBConnection] module not found', 1
+    unless eval { require Bio::EnsEMBL::DBSQL::DBConnection; require Bio::EnsEMBL::DBSQL::ProxyDBConnection; 1 };
+
+  my $dbc = Bio::EnsEMBL::DBSQL::DBConnection->new(-HOST => 'host', -PORT => 3306, -USER => 'user');
+  my $proxy = Bio::EnsEMBL::DBSQL::ProxyDBConnection->new(-DBC => $dbc, -DBNAME => 'human');
+
+  ok(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($proxy, 
+						'Bio::EnsEMBL::DBSQL::DBConnection'), 'Bio::EnsEMBL::DBSQL::DBConnection');
+  is(Bio::EnsEMBL::XS::Utils::Scalar::check_ref($proxy, 'Bio::EnsEMBL::Gene'), 0, 'Bio::EnsEMBL::Utils::Proxy');  
+}
+
 
 diag( "Testing check_ref in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 

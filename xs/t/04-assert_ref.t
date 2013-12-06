@@ -61,6 +61,7 @@ if ($@) { ok($@ =~ 'was expected to be', $test_name); } else { ok(0, $test_name)
 # TODO
 # test I/O objects and FORMAT types
 
+# Test with EnsEMBL blessed objects
 SKIP: {
   skip 'Cannot continue testing: Bio::EnsEMBL::[Slice|CoordSystem] module not found', 1
     unless eval { require Bio::EnsEMBL::Slice; require Bio::EnsEMBL::CoordSystem; 1 };
@@ -86,6 +87,22 @@ SKIP: {
   eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($test_coord_system, 'Bio::EnsEMBL::Slice') };
   if ($@) { ok($@ =~ 'is not an ISA', $test_name); } else { ok(0, $test_name); }  
 }
+
+# Test with EnsEMBL proxy objects
+SKIP: {
+  skip 'Cannot continue testing: Bio::EnsEMBL::[DBConnection|ProxyDBConnection] module not found', 1
+    unless eval { require Bio::EnsEMBL::DBSQL::DBConnection; require Bio::EnsEMBL::DBSQL::ProxyDBConnection; 1 };
+
+  my $dbc = Bio::EnsEMBL::DBSQL::DBConnection->new(-HOST => 'host', -PORT => 3306, -USER => 'user');
+  my $proxy = Bio::EnsEMBL::DBSQL::ProxyDBConnection->new(-DBC => $dbc, -DBNAME => 'human');
+
+  ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($proxy, 
+						'Bio::EnsEMBL::DBSQL::DBConnection'), 'Bio::EnsEMBL::DBSQL::DBConnection');
+  $test_name = 'not Bio::EnsEMBL::Gene';
+  eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref($proxy, 'Bio::EnsEMBL::Gene') };
+  if ($@) { ok($@ =~ 'is not an ISA', $test_name); } else { ok(0, $test_name); }  
+}
+
 
 diag( "Testing assert_ref in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
