@@ -153,9 +153,33 @@ check_ref(ref,expected)
     }
 
     if(SvTYPE(ref) != SVt_NULL) {
-      if(sv_isobject(ref)) {  
-         if(sv_derived_from(ref, (char*)SvPV_nolen(expected)))
-           RETVAL = 1;
+      const char* exp_class_name = (const char*)SvPV_nolen(expected);
+
+      if(sv_isobject(ref)) {
+        const char* ref_class_name = HvNAME(SvSTASH(SvRV(ref)));
+    
+        if(strstr(ref_class_name, "Proxy") != NULL) {
+          /* If the ref is a proxy object (i.e. inherits from Bio::EnsEMBL::Utils::Proxy */
+	  /* The real class to check is that of the proxied object */
+	  /* We can do this by calling the isa method of the proxy object */
+	  dSP;
+	  int count;
+
+	  PUSHMARK(SP);
+	  XPUSHs(sv_2mortal(newSVsv(ref)));
+	  XPUSHs(sv_2mortal(newSVpv(exp_class_name, 0)));
+	  PUTBACK;
+
+	  count = call_method("isa", G_SCALAR);
+	 
+	  SPAGAIN;
+	 
+	  /* Check whether the proxied object is of the expected class */
+	  if(POPi) /*sv_derived_from(POPi, exp_class_name)) */
+	    RETVAL = 1;
+	  PUTBACK;
+        } else if(sv_derived_from(ref, exp_class_name))
+          RETVAL = 1;
       } else if(SvROK(ref)) {
         /* See http://perldoc.perl.org/perlapi.html#SV-Flags */
       	char* e = SvPVX(expected);
