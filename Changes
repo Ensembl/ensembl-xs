@@ -1,5 +1,14 @@
 Revision history for Bio::EnsEMBL::XS
 
+1.1.1    Fri Dec 6 15:56:07 GMT 2013
+	 Bug fix. check_ref and assert_ref weren't working with
+         Bio::EnsEMBL::Utils::Proxy derived objects.
+
+1.1.0    Tue Oct 29 16:31:28 GMT 2013
+         Second version. Implements in C some of the methods
+         of the Bio::EnsEMBL::Utils::Scalar module (e.g. check_ref,
+	 assert_ref).
+
 1.0.0	 Fri Oct 18 14:58:22 BST 2013
 	 First version. Implements in C the rearrange method of
 	 module Bio::EnsEMBL::Utils::Argument.
