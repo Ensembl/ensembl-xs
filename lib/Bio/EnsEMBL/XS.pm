@@ -1,3 +1,32 @@
+=head1 LICENSE
+
+Copyright [1999-2013] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=cut
+
+
+=head1 CONTACT
+
+  Please email comments or questions to the public Ensembl
+  developers list at <dev@ensembl.org>.
+
+  Questions may also be sent to the Ensembl help desk at
+  <helpdesk@ensembl.org>.
+
+=cut
+
 package Bio::EnsEMBL::XS;
 
 use 5.8.9;
@@ -94,22 +123,5 @@ developers list at <dev@ensembl.org>.
 
 Questions may also be sent to the Ensembl help desk at
 <helpdesk@ensembl.org>.
-
-=head1 ACKNOWLEDGEMENTS
-
-Greatly in debt with Andy Yates, C<< <ayates at ebi.ac.uk> >>, 
-for his generous support, kindness and expertise.
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright (c) 1999-2013 The European Bioinformatics Institute and
-Genome Research Limited.  All rights reserved.
-
-This software is distributed under a modified Apache license.
-For license details, please see
-
-  http://www.ensembl.org/info/about/code_licence.html
-
-=cut
 
 1; # End of Bio::EnsEMBL::XS
