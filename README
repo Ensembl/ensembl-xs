@@ -5,8 +5,7 @@
 
 			   6th December 2013
 
-        Copyright (c) 2014 The European Bioinformatics Institute and
-	     Genome Research Limited. All rights reserved.
+Copyright (c) 2014 Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 
 
 The Bio::EnsEMBL::XS module uses the Perl XS layer to provide fast re-implementations 
