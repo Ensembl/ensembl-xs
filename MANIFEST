@@ -13,3 +13,7 @@ xs/Bio-EnsEMBL.xs
 xs/Makefile.PL
 xs/t/01-leak.t
 xs/t/02-rearrange.t
+xs/t/03-check_ref.t
+xs/t/04-assert_ref.t
+xs/t/05-assert_numeric.t
+xs/t/06-assert_integer.t
