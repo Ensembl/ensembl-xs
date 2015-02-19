@@ -129,8 +129,12 @@ SKIP: {
 # Use of uninitialized value in subroutine entry at /nfs/users/nfs_w/wm2/Perl/ensembl-funcgen/modules/Bio/EnsEMBL/Funcgen/DBSQL/DBAdaptor.pm line 270.
 #
 $test_name = 'undefined reference (attribute name == undef)';
-eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(undef, 'ARRAY') };
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(undef, 'ARRAY', undef) };
 if ($@) { ok($@ =~ /The given reference.+?Unknown/, $test_name); } else { ok(0, $test_name); }
+$test_name = 'undefined reference (attribute name assigned)';
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(undef, 'ARRAY', "dummy") };
+if ($@) { ok($@ =~ /dummy/, $test_name); } else { ok(0, $test_name); }
+
 
 diag( "Testing assert_ref in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
