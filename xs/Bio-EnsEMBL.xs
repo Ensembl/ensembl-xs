@@ -258,6 +258,10 @@ assert_ref(ref,expected,attribute_name="-Unknown-")
     if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
       XSRETURN_YES;
 
+    /* attribute_name might be explicitly set to undef */
+    if(!attribute_name)
+      attribute_name = "-Unknown-";
+
     if(SvTYPE(ref) == SVt_NULL) {
       croak("The given reference for attribute %s was undef", attribute_name);
     } 
