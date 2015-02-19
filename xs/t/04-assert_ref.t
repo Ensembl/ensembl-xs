@@ -49,6 +49,7 @@ $test_name = 'reference type';
 eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(1, 'ARRAY') };
 if ($@) { ok($@ =~ 'Asking for the type', $test_name); } else { ok(0, $test_name); }
 
+
 #
 # Test normal mode of operation
 #
@@ -118,6 +119,18 @@ SKIP: {
   if ($@) { ok($@ =~ 'is not an ISA', $test_name); } else { ok(0, $test_name); }  
 }
 
+#
+# bug reported by Will McLaren (19/02/2015)
+#
+# assert_ref throws a warning when you only give it two args:
+# assert_ref($obj, $class, $name);
+# where $name is undef gives:
+# e.g. 
+# Use of uninitialized value in subroutine entry at /nfs/users/nfs_w/wm2/Perl/ensembl-funcgen/modules/Bio/EnsEMBL/Funcgen/DBSQL/DBAdaptor.pm line 270.
+#
+$test_name = 'undefined reference (attribute name == undef)';
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref(undef, 'ARRAY') };
+if ($@) { ok($@ =~ /The given reference.+?Unknown/, $test_name); } else { ok(0, $test_name); }
 
 diag( "Testing assert_ref in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
