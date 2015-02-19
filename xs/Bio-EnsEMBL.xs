@@ -248,19 +248,20 @@ check_ref(ref,expected)
     RETVAL
 
 IV
-assert_ref(ref,expected,attribute_name="-Unknown-")
+assert_ref(ref,expected, ...)
   SV* ref
   SV* expected
-  char* attribute_name
+  PREINIT:
+    char* attribute_name;
   CODE:
     RETVAL = 1;
 
     if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
       XSRETURN_YES;
 
-    /* attribute_name might be explicitly set to undef */
-    if(!attribute_name)
-      attribute_name = "-Unknown-";
+    attribute_name = "-Unknown-";
+    if(items > 2 && SvOK(ST(2)) && SvTYPE(ST(2)) != SVt_NULL)     /* attribute_name might be explicitly set to undef */
+      attribute_name = SvPV_nolen(ST(2));
 
     if(SvTYPE(ref) == SVt_NULL) {
       croak("The given reference for attribute %s was undef", attribute_name);
