@@ -422,3 +422,28 @@ assert_integer(scalar,attribute_name="-Unknown-")
 
   OUTPUT:
     RETVAL
+
+
+MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Variation::Utils::VariationEffect
+
+PROTOTYPES: DISABLED
+
+int
+overlap(f1_start,f1_end,f2_start,f2_end)
+  int f1_start;
+  int f2_start;
+  int f1_end;
+  int f2_end;
+  
+  CODE:
+    RETVAL = 0;
+    
+    if(f1_end >= f2_start) {
+      if(f1_start <= f2_end) {
+        RETVAL = 1;
+      }
+    }
+    
+  OUTPUT:
+    RETVAL
+
