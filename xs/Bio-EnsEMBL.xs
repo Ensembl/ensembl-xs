@@ -350,14 +350,19 @@ assert_ref(ref,expected, ...)
     RETVAL
 
 IV
-assert_numeric(scalar,attribute_name="-Unknown-")
+assert_numeric(scalar, ...)
   SV* scalar
-  char* attribute_name
+  PREINIT:
+    char* attribute_name;
   CODE:
     RETVAL = 1;
 
     if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
       XSRETURN_YES;
+
+    attribute_name = "-Unknown-";
+    if(items > 1 && SvOK(ST(1)) && SvTYPE(ST(1)) != SVt_NULL)     /* attribute_name might be explicitly set to undef */
+      attribute_name = SvPV_nolen(ST(1));
 
     if(SvTYPE(scalar) == SVt_NULL) {
       croak("%s attribute is undefined", attribute_name);
@@ -372,14 +377,19 @@ assert_numeric(scalar,attribute_name="-Unknown-")
     RETVAL
 
 IV
-assert_integer(scalar,attribute_name="-Unknown-")
+assert_integer(scalar, ...)
   SV* scalar
-  char* attribute_name
+  PREINIT:
+    char* attribute_name;
   CODE:
     RETVAL = 1;
 
     if (!SvTRUE(get_sv("Bio::EnsEMBL::Utils::Scalar::ASSERTIONS", FALSE)))
       XSRETURN_YES;
+
+    attribute_name = "-Unknown-";
+    if(items > 1 && SvOK(ST(1)) && SvTYPE(ST(1)) != SVt_NULL)     /* attribute_name might be explicitly set to undef */
+      attribute_name = SvPV_nolen(ST(1));
 
     /*
        Do not call the perl assert_numeric subroutine from C,
