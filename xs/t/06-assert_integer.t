@@ -62,6 +62,13 @@ if ($@) { ok($@ =~ 'not an Integer', $test_name); } else { ok(0, $test_name); }
 $a = 123;
 ok(Bio::EnsEMBL::XS::Utils::Scalar::assert_numeric($a), "integer");
 
-diag( "Testing assert_[numeric|integer] in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
+$test_name = 'non numeric argument (attribute name == undef)';
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_integer([], undef) };
+if ($@) { ok($@ =~ /Attribute.+?Unknown/, $test_name); } else { ok(0, $test_name); }
+$test_name = 'non numeric argument (attribute name assigned)';
+eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_integer([], "dummy") };
+if ($@) { ok($@ =~ /dummy/, $test_name); } else { ok(0, $test_name); }
+
+diag( "Testing assert_integer in Bio::EnsEMBL::XS::Utils::Scalar $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
 
 done_testing();
