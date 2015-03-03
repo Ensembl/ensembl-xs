@@ -1,5 +1,5 @@
 #
-# Copyright [1999-2014] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+# Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,6 @@ WriteMakefile(
     'C'        => [ qw( Bio-EnsEMBL.c ) ],
     'XS'       => { 'Bio-EnsEMBL.xs' => 'Bio-EnsEMBL.c' },
     'OBJECT'   => 'Bio-EnsEMBL.o',
-    'VERSION'  => 1.1, # has to be set (to number), otherwise XSLoader complains
+    'VERSION'  => 1.2, # has to be set (to number), otherwise XSLoader complains
     'NORECURS' => 1,
 );
