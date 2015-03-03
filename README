@@ -1,11 +1,11 @@
 	
 			    Bio::EnsEMBL::XS
 
-			     Version 1.1.1
+			     Version 1.2.1
 
-			   6th December 2013
+			    3rd March 2015
 
-Copyright (c) 2014 Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+Copyright (c) 2015 Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 
 
 The Bio::EnsEMBL::XS module uses the Perl XS layer to provide fast re-implementations 
@@ -45,7 +45,7 @@ with the invaluable assistance of Andy Yates.
 LICENSE AND COPYRIGHT
 ---------------------
 
-Copyright [1999-2014] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,5 +1,19 @@
 Revision history for Bio::EnsEMBL::XS
 
+1.2.1    Tue Mar 03 00:00:00 GMT 2015
+         Bug fix. assert_[integer|numeric] second parameter is
+         not assigned the default value if corresponding argument
+	 in function call is explicitly set to undef.
+
+1.2.0    Thu Feb 26 00:00:00 GMT 2015
+	 Third version. Implements in C the overlap method
+	 of module Bio::Ensembl::Variation::Utils::VariationEffect.
+
+1.1.2    Thu Feb 19 16:14:25 GMT 2015
+         Bug fix. assert_ref third parameter is not assigned
+         the default value if corresponding argument in function
+         call is explicitly set to undef.
+         
 1.1.1    Fri Dec 6 15:56:07 GMT 2013
 	 Bug fix. check_ref and assert_ref weren't working with
          Bio::EnsEMBL::Utils::Proxy derived objects.
