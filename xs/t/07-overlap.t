@@ -30,4 +30,6 @@ ok(Bio::EnsEMBL::XS::Variation::Utils::VariationEffect::overlap(3, 5, 1, 10), "o
 ok(!Bio::EnsEMBL::XS::Variation::Utils::VariationEffect::overlap(1, 5, 6, 7), "no overlap 3'");
 ok(!Bio::EnsEMBL::XS::Variation::Utils::VariationEffect::overlap(4, 5, 1, 3), "no overlap 5'");
 
+diag( "Testing variation overlap Bio::EnsEMBL::XS $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
+
 done_testing();
