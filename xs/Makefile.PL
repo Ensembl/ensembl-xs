@@ -20,7 +20,7 @@ WriteMakefile(
     'C'        => [ qw( Bio-EnsEMBL.c ) ],
     'XS'       => { 'Bio-EnsEMBL.xs' => 'Bio-EnsEMBL.c' },
     'OBJECT'   => 'Bio-EnsEMBL.o',
-    # 'VERSION'  => '1.2.1', # has to be set (to number), otherwise XSLoader complains
+    # 'VERSION'  => '1.2.2', # has to be set (to number), otherwise XSLoader complains
     VERSION_FROM     => '../lib/Bio/EnsEMBL/XS.pm',
     'NORECURS' => 1,
 );

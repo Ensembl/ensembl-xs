@@ -30,7 +30,7 @@ limitations under the License.
 
 package Bio::EnsEMBL::XS;
 
-use 5.8.8;
+use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
 
