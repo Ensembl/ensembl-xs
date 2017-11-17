@@ -10,7 +10,7 @@ WriteMakefile(
     # ABSTRACT_FROM    => 'lib/Bio/EnsEMBL/XS.pm',
     # LICENSE          => 'Artistic_2_0',
     PL_FILES         => {},
-    MIN_PERL_VERSION => 5.8.9,
+    MIN_PERL_VERSION => 5.8.8,
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
     },
