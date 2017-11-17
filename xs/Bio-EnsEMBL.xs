@@ -218,10 +218,12 @@ check_ref(ref,expected)
 	    if(strEQ(e, "GLOB"))
 	      RETVAL = 1;
 	    break;
+#ifdef PERL_IS_5_14 
 	  case SVt_REGEXP:
 	    if(strEQ(e, "Regexp"))
 	      RETVAL = 1;
 	    break;
+#endif
 	  case SVt_PVIO:
 	    if(strEQ(e, "IO"))
 	      RETVAL = 1;
