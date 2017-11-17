@@ -323,9 +323,11 @@ assert_ref(ref,expected, ...)
         case SVt_PVGV:
           class = "GLOB";
           break;
-        case SVt_REGEXP:
+#ifdef PERL_IS_5_14
+      case SVt_REGEXP:
           class = "Regexp";
 	  break;
+#endif
         case SVt_PVIO:
           class = "IO";
           break;
