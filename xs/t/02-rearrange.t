@@ -15,7 +15,7 @@
 # limitations under the License.
 
 #
-use 5.8.9;
+use 5.8.8;
 use strict;
 use warnings FATAL => 'all';
 
