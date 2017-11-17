@@ -23,17 +23,12 @@ before_install:
 install:
   - perl Makefile.PL
   - make
-  
+
 script: "./travisci/harness.sh"
 
-# jobs:
-#   include:
-#   - stage: trigger_dependent_builds
-#     script: "./travisci/trigger-dependent-build.sh"
-
-# notifications:
-#   email:
-#     on_success: always
-#     on_failure: always
-#   slack:
-#     secure: mS8ac72wmNRN6sz9nNyoFf59xnC75sU7TW4v/kUfC6hTW8pmwdx4ss1P4qkegJJb3bvxj+oKQRUqk8BtApozPyNXTkBDTMjsPXH0IQ4uz9JE5PHIzLpW1PMPiiV/JbyM2LX8vUFm/CA1t/tiwzSQ3PqrN3KjTrqbcyrEe+hD+jQ=
+notifications:
+  email:
+    on_success: always
+    on_failure: always
+  slack:
+    secure: VXvzkk5ew/C114n6WJlWVxQOXviyTfuRkEoclyjLgqVKbDo6GqCZA2+BDFP8ZjHXP+TcMnD4nVzYJ7usQD52JVbwiTHl+gL7MVk01H7OZUGWdH1onRCiIVBaybvESjzIv5Uc8dJo4XlLKfmhtEDKc2s4MzgTWdCUgh39zsA+g9M=
