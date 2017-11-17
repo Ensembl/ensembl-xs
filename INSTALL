@@ -1,12 +1,12 @@
 	
 			    Bio::EnsEMBL::XS
 
-			     Version 1.2.1
+			     Version 1.2.2
 
-			    3rd March 2015
+			    November 17 2015
 
-     Copyright [1999- 2015] Wellcome Trust Sanger Institute and the 
-	         EMBL-European Bioinformatics Institute
+Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+Copyright [2016-2017] EMBL-European Bioinformatics Institute     
 
 
 OBTAINING THE ENSEMBL API EXTENSIONS
@@ -109,7 +109,8 @@ with the invaluable assistance of Andy Yates.
 LICENSE AND COPYRIGHT
 ---------------------
 
-Copyright [1999-2016] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+Copyright [2016-2017] EMBL-European Bioinformatics Institute     
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
