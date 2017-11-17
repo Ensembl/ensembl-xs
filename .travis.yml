@@ -1,0 +1,40 @@
+language: perl
+
+perl:
+  - '5.14'
+  - '5.12'
+  - '5.10'
+  - '5.8'
+
+env:
+  global:
+    secure: EbGoRzfTTy/nlGPRYOEhKcYnIIrUHeM5etlqdAsMrfOkCCVJe7/QIWUG7hx1qdprIPdrKZ0jnmzBO3STz5m+TrsE/rAZjTM/MyEtwxAFEsdNlOKeozyE4Y4kwFMOqiLAFhHPtd3JhV92VMj3VSGVLkhNaaXbz1kj/aU14hOhbT4=
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - unzip
+
+before_install:
+  - git clone --branch master --depth 1 https://github.com/Ensembl/ensembl.git
+  - git clone -b bioperl-release-1-6-1 --depth 1 https://github.com/bioperl/bioperl-live.git
+
+install:
+  - perl Makefile.PL
+  - make
+  
+script: "./travisci/harness.sh"
+
+# jobs:
+#   include:
+#   - stage: trigger_dependent_builds
+#     script: "./travisci/trigger-dependent-build.sh"
+
+# notifications:
+#   email:
+#     on_success: always
+#     on_failure: always
+#   slack:
+#     secure: mS8ac72wmNRN6sz9nNyoFf59xnC75sU7TW4v/kUfC6hTW8pmwdx4ss1P4qkegJJb3bvxj+oKQRUqk8BtApozPyNXTkBDTMjsPXH0IQ4uz9JE5PHIzLpW1PMPiiV/JbyM2LX8vUFm/CA1t/tiwzSQ3PqrN3KjTrqbcyrEe+hD+jQ=
