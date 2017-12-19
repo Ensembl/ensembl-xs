@@ -40,11 +40,11 @@ Bio::EnsEMBL::XS - C extensions of the Ensembl API
 
 =head1 VERSION
 
-Version 1.2.2
+Version 1.3.1
 
 =cut
 
-our $VERSION = '1.2.2'; 
+our $VERSION = '1.3.1'; 
 
 =head1 SYNOPSIS
 
