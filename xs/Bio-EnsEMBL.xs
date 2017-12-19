@@ -25,7 +25,7 @@ extern "C" {
 #ifdef DEBUGME
 #define TRACEME(x) do { \
 	if (SvTRUE(perl_get_sv("Bio::EnsEMBL::XS::DEBUGME", TRUE))) \
-	   { PerlIO_stdoutf x; PerlIO_stdoutf ("\n"); } \
+	  { PerlIO_stdoutf (x); PerlIO_stdoutf ("\n"); }	    \
 } while (0)
 #else
 #define TRACEME(x)
@@ -38,11 +38,58 @@ extern "C" {
 /*#include "ppport.h"*/
 #include "XSUB.h"
 
+#include "avltree.h"
 #include <string.h>
 
 #ifdef __cplusplus
 }
 #endif
+
+typedef avltree_t AVLTree;
+
+/* C-level callbacks required by the AVL tree library */
+
+static SV* callback = (SV*)NULL;
+
+static int compare(SV *p1, SV *p2) {
+  int cmp;
+  
+  dSP;
+  int count;
+
+  //ENTER;
+  //SAVETMPS;
+  
+  PUSHMARK(SP);
+  XPUSHs(sv_2mortal(newSVsv(p1)));
+  XPUSHs(sv_2mortal(newSVsv(p2)));
+  PUTBACK;
+  
+  /* Call the Perl sub to process the callback */
+  count = call_sv(callback, G_SCALAR);
+
+  SPAGAIN;
+
+  if(count != 1)
+    croak("Did not return a value\n");
+  
+  cmp = POPi;
+  PUTBACK;
+
+  //FREETMPS;
+  //LEAVE;
+
+  return cmp;
+}
+
+static SV* clone(SV* p) {
+  return newSVsv(p);
+}
+
+void destroy(SV* p) {
+  SvREFCNT_dec(p);
+}
+
 
 /*====================================================================
  * XS SECTION                                                     
@@ -462,3 +509,69 @@ overlap(f1_start,f1_end,f2_start,f2_end)
   OUTPUT:
     RETVAL
 
+MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Tree::Interval
+
+void
+new ( class, cmp_fn )
+    char* class
+    SV*   cmp_fn
+    PROTOTYPE: $$
+    PREINIT:
+        AVLTree* tree;
+    PPCODE:
+    {
+      SV* self;
+      HV* hash = newHV();
+
+      TRACEME("Registering callback for comparison");
+      if(callback == (SV*)NULL)
+        callback = newSVsv(cmp_fn);
+      else
+        SvSetSV(callback, cmp_fn);
+    
+      TRACEME("Allocating AVL tree");      
+      tree = avltree_new(compare, clone, destroy);
+      if(tree == NULL)
+	croak("Unable to allocate AVL tree");
+	
+      hv_store(hash, "tree", 4, newSViv(PTR2IV(tree)), 0);
+      
+      self = newRV_noinc((SV*)hash);;
+      sv_2mortal(self);
+      sv_bless(self, gv_stashpv(class, FALSE));
+     
+      PUSHs(self);
+      XSRETURN(1);
+    }
+
+int
+size (self)
+     SV* self
+     PROTOTYPE: $
+     PREINIT:
+	 AVLTree* tree;
+     CODE:
+	 // get tree pointer and invoke size method
+         SV** svp = hv_fetch(SvRV(self), "tree", 4, 0);
+         if(svp == NULL)
+	   croak "Unable to access tree";
+         tree = INT2PTR(AVLTree*, SvIV(*svp)); 
+
+         RETVAL = avltree_size(tree);
+     OUTPUT:
+         RETVAL
+
+void DESTROY(self)
+    SV* self
+    PROTOTYPE: $
+    PREINIT:
+        AVLTree* tree;
+    CODE:
+        TRACEME("Deleting AVL tree");
+        SV** svp = hv_fetch(SvRV(self), "tree", 4, 0);
+        if(svp == NULL)
+          croak "Unable to access tree";
+
+        tree = INT2PTR(AVLTree*, SvIV(*svp)); 
+
+        avltree_delete(tree);
