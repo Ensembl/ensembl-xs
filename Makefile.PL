@@ -22,6 +22,17 @@ WriteMakefile(
         #'Foo::Bar::Module' => 5.0401,
     },
     'DIR'  => [ 'xs' ], # where to look for additional Makefile.PLs
+    LIBS      => [''],   # e.g., '-lm',
+    DEFINE    => '-DENABLE_DEBUG', # e.g., '-DHAVE_SOMETHING'	      
+    INC       => '-Iavltree',     # e.g., '-I/usr/include/other'
+    MYEXTLIB  => 'avltree/libavltree$(LIB_EXT)',	      	      
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Bio-EnsEMBL-XS-*' },
 );
+
+sub MY::postamble {
+'
+$(MYEXTLIB): avltree/Makefile
+	cd avltree && $(MAKE) $(PASSTHRU)
+';
+}
