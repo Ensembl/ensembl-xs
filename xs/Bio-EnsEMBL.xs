@@ -51,7 +51,10 @@ typedef avltree_t AVLTree;
 
 static SV* callback = (SV*)NULL;
 
-static int compare(SV *p1, SV *p2) {
+static int svcompare(SV *p1, SV *p2) {
+
+  dTHX; /* fetch context */
+  
   int cmp;
   
   dSP;
@@ -82,11 +85,13 @@ static int compare(SV *p1, SV *p2) {
   return cmp;
 }
 
-static SV* clone(SV* p) {
+static SV* svclone(SV* p) {
+  dTHX; 
   return newSVsv(p);
 }
 
-void destroy(SV* p) {
+void svdestroy(SV* p) {
+  dTHX; 
   SvREFCNT_dec(p);
 }
 
@@ -530,7 +535,7 @@ new ( class, cmp_fn )
         SvSetSV(callback, cmp_fn);
     
       TRACEME("Allocating AVL tree");      
-      tree = avltree_new(compare, clone, destroy);
+      tree = avltree_new(svcompare, svclone, svdestroy);
       if(tree == NULL)
 	croak("Unable to allocate AVL tree");
 	
@@ -552,9 +557,9 @@ size (self)
 	 AVLTree* tree;
      CODE:
 	 // get tree pointer and invoke size method
-         SV** svp = hv_fetch(SvRV(self), "tree", 4, 0);
+         SV** svp = hv_fetch((HV*)SvRV(self), "tree", 4, 0);
          if(svp == NULL)
-	   croak "Unable to access tree";
+	   croak("Unable to access tree\n");
          tree = INT2PTR(AVLTree*, SvIV(*svp)); 
 
          RETVAL = avltree_size(tree);
@@ -568,9 +573,9 @@ void DESTROY(self)
         AVLTree* tree;
     CODE:
         TRACEME("Deleting AVL tree");
-        SV** svp = hv_fetch(SvRV(self), "tree", 4, 0);
+        SV** svp = hv_fetch((HV*)SvRV(self), "tree", 4, 0);
         if(svp == NULL)
-          croak "Unable to access tree";
+          croak("Unable to access tree\n");
 
         tree = INT2PTR(AVLTree*, SvIV(*svp)); 
 
