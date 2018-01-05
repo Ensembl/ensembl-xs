@@ -34,9 +34,13 @@ WriteMakefile(
 					  },
 			    },
 
-	      'DIR'  => [ 'avltree', 'xs' ], # where to look for additional Makefile.PLs
+	      # 'DIR'  => [ 'avltree', 'xs' ], # where to look for additional Makefile.PLs
 	      LIBS      => [''],   # e.g., '-lm',
 	      DEFINE    => '-DENABLE_DEBUG', # e.g., '-DHAVE_SOMETHING'
+	      INC       => '-Iavltree',
+	      'C'        => [ qw( Bio-EnsEMBL.c ) ],
+	      'XS'       => { 'Bio-EnsEMBL.xs' => 'Bio-EnsEMBL.c' },
+	      'OBJECT'   => 'Bio-EnsEMBL.o',
 	      MYEXTLIB  => 'avltree/libavltree$(LIB_EXT)', 
 	      dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 	      clean => { FILES => 'Bio-EnsEMBL-XS-*' },
