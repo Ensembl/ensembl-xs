@@ -45,6 +45,7 @@ Version 1.3.1
 =cut
 
 our $VERSION = '1.3.1'; 
+our $ENABLE_DEBUG = 1;
 
 =head1 SYNOPSIS
 
