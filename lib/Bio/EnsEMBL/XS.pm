@@ -94,9 +94,6 @@ preferred way. You just import the original module, which will then detect
 whether Bio::EnsEMBL::XS has been installed in the system and use the 
 corresponding optimised version of the module's method.
 
-The first release features one fast reimplementation of the method rearrange
-of module Bio::EnsEMBL::Argument.
-
 =cut 
 
 require Exporter;
@@ -116,7 +113,6 @@ Alessandro Vullo, C<< <avullo at ebi.ac.uk> >>
 
 =head1 BUGS
 
-No known bugs at the moment. Development in progress.
 
 =head1 SUPPORT
 
@@ -125,5 +121,7 @@ developers list at <http://lists.ensembl.org/mailman/listinfo/dev>.
 
 Questions may also be sent to the Ensembl help desk at
 <http://www.ensembl.org/Help/Contact>.
+
+=cut
 
 1; # End of Bio::EnsEMBL::XS
