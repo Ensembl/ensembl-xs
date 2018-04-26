@@ -1,4 +1,3 @@
-#!perl -T
 # Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 # Copyright [2016-2018] EMBL-European Bioinformatics Institute
 # 
@@ -14,22 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
+use FindBin '$Bin';
 
 use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-use Test::More HAS_LEAKTRACE ? (tests => 5) : (skip_all => 'require Test::LeakTrace');
+use Test::More HAS_LEAKTRACE ? (tests => 11) : (skip_all => 'require Test::LeakTrace');
 use Test::LeakTrace;
 
-BEGIN { use_ok('Bio::EnsEMBL::XS'); }
+use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 
-sub cmp_numbers {
-  my ($i1, $i2) = @_;
-
-  return $i1<$i2?-1:($i1>$i2)?1:0;
-}
+use_ok('Bio::EnsEMBL::XS');
+use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
+use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable');
 
 no_leaks_ok {
   my @args = ('-TwO' => 2,
@@ -51,7 +47,72 @@ no_leaks_ok {
 } 'Bio::EnsEMBL::XS::Utils::assert_ref';
 
 no_leaks_ok {
-  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval->new(\&cmp_numbers);
-} 'Bio::EnsEMBL::XS::Utils::Tree::Interval: Empty Tree';
+  my $i1 = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 20, 10);
+  my ($low, $high, $data) = ($i1->low, $i1->high, $i1->data);
+  
+  my $i2 = $i1->copy;
+  ($low, $high, $data) = ($i2->low, $i2->high, $i2->data);
+  
+  my $i3 = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(21, 30, 21);
+  $i1->overlap($i3); $i3->equal($i1);
+  
+  my $i4 = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(5, 15, 5);
+  $i1->equal($i4); $i4->overlap($i1);
+
+  my $i5 = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 20, { a => 1, b => 2 });
+  ($low, $high, $data) = ($i5->low, $i5->high, $i5->data);
+  $i1->overlap($i5); $i5->equal($i1);
+ 
+} 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval';
+
+no_leaks_ok {
+  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+} 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: empty tree';
+
+my $intervals = make_intervals();
+
+no_leaks_ok {
+  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+  foreach my $interval (@{$intervals}) {
+    $tree->insert($interval);
+  }
+  $tree->size();
+} 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion';
+
+no_leaks_ok {
+  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+  foreach my $interval (@{$intervals}) {
+    $tree->insert($interval);
+  }
+
+  my $result = $tree->find(6., 7.);
+  $result = $tree->find(1, 4);
+
+  my $results = $tree->findall(8, 11);
+
+} 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion/querying';
+
+no_leaks_ok {
+  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+  foreach my $interval (@{$intervals}) {
+    $tree->insert($interval);
+  }
+
+  for my $i (0 .. 5) {
+    $tree->remove($intervals->[$i]);
+    $tree->size();
+  }
+} 'Bio::EnsEMBL::XS::Utils::Tree::Interval: after insertion/removal';
 
 diag( "Testing memory leaking Bio::EnsEMBL::XS $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
+
+sub make_intervals {
+  return [
+	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(15, 20, 10),
+	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 30, 20),
+	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(17, 19, 30),
+	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(5, 20, 40),
+	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(12, 15, 50),
+	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(30, 40, 25)
+	 ];
+}
