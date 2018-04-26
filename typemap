@@ -1,0 +1,3 @@
+TYPEMAP
+Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval        T_PTROBJ
+Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable		  T_PTROBJ
