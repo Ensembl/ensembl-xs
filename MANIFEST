@@ -1,15 +1,24 @@
-Changes
-lib/Bio/EnsEMBL/XS.pm
-Makefile.PL
-MANIFEST			This list of files
-README
-bin/rearrange-bench.pl
-t/00-load.t
-t/boilerplate.t
-t/manifest.t
-t/pod-coverage.t
-t/pod.t
 Bio-EnsEMBL.xs
+Changes
+INSTALL
+LICENSE
+MANIFEST			This list of files
+Makefile.PL
+README
+TODO
+bin/rearrange-bench.pl
+itree/interval.c
+itree/interval.h
+itree/interval_list.c
+itree/interval_list.h
+itree/interval_tree.c
+itree/interval_tree.h
+itree/utils.h
+itree/Makefile.PL
+lib/Bio/EnsEMBL/XS.pm
+lib/Bio/EnsEMBL/XS/Utils/Tree/Interval/Mutable.pm
+lib/Bio/EnsEMBL/XS/Utils/Tree/Interval/Mutable/Interval.pm
+t/00-load.t
 t/01-leak.t
 t/02-rearrange.t
 t/03-check_ref.t
@@ -18,3 +27,7 @@ t/05-assert_numeric.t
 t/06-assert_integer.t
 t/07-overlap.t
 t/08-interval-tree.t
+t/boilerplate.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
