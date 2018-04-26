@@ -37,18 +37,18 @@ WriteMakefile(
 	      # 'DIR'  => [ 'avltree', 'xs' ], # where to look for additional Makefile.PLs
 	      LIBS      => [''],   # e.g., '-lm',
 	      DEFINE    => '-DENABLE_DEBUG', # e.g., '-DHAVE_SOMETHING'
-	      INC       => '-Iavltree',
+	      INC       => '-Iitree',
 	      'C'        => [ qw( Bio-EnsEMBL.c ) ],
 	      'XS'       => { 'Bio-EnsEMBL.xs' => 'Bio-EnsEMBL.c' },
 	      'OBJECT'   => 'Bio-EnsEMBL.o',
-	      MYEXTLIB  => 'avltree/libavltree$(LIB_EXT)', 
+	      MYEXTLIB  => 'itree/libitree$(LIB_EXT)', 
 	      dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 	      clean => { FILES => 'Bio-EnsEMBL-XS-*' },
 	     );
 
 sub MY::postamble {
 '
-$(MYEXTLIB): avltree/Makefile
-	cd avltree && $(MAKE) $(PASSTHRU)
+$(MYEXTLIB): itree/Makefile
+	cd itree && $(MAKE) $(PASSTHRU)
 ';
 }
