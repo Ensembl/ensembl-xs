@@ -654,7 +654,7 @@ findall( tree, low, high )
 
     for(item = ilisttrav_first(trav); item!=NULL; item=ilisttrav_next(trav)) {
       SV* ref = newSV(0);
-      sv_setref_pv( ref, "Tree::Interval::Fast::Interval", (void*)interval_new(item->low, item->high, item->data, svclone, svdestroy) );
+      sv_setref_pv( ref, "Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval", (void*)interval_new(item->low, item->high, item->data, svclone, svdestroy) );
       av_push(av_ref, ref);
     }
 
