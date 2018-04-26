@@ -34,4 +34,36 @@ use Bio::EnsEMBL::XS; # load the XS
 
 $Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval::VERSION = '1.3.1';
 
+=head1 METHODS
+
+=head2 new
+
+Construct an interval
+
+=head2 copy
+
+Return a copy of the interval
+
+=head2 data
+
+Return the data associated with the interval
+
+=head2 equal
+
+Return whether the interval is equal to the given one
+
+=head2 high
+
+Return the right boundary of the interval
+
+=head2 low
+
+Return the left boundary of the interval
+
+=head2 overlap
+
+Return whether the interval overlaps with the given one
+
+=cut
+
 1;

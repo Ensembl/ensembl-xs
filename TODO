@@ -1,5 +1,1 @@
-- include avl tree library
-- include library in Makefiles
-- transform avl tree into interval tree library
-- implement interface to library
-- tests
+Documentation for the interval tree modules
