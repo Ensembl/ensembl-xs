@@ -35,66 +35,35 @@ extern "C" {
 #include "perl.h"
 #define NEED_sv_2pv_flags
 #define NEED_newRV_noinc
-/*#include "ppport.h"*/
 #include "XSUB.h"
+#include "ppport.h"
+  
+#include "interval.h"
+#include "interval_list.h"
+#include "interval_tree.h"
 
-#include "avltree.h"
 #include <string.h>
-
+  
 #ifdef __cplusplus
 }
 #endif
 
-typedef avltree_t AVLTree;
+typedef interval_t* Bio__EnsEMBL__XS__Utils__Tree__Interval__Mutable__Interval;
+typedef itree_t* Bio__EnsEMBL__XS__Utils__Tree__Interval__Mutable;
 
-/* C-level callbacks required by the AVL tree library */
-
-static SV* callback = (SV*)NULL;
-
-static int svcompare(SV *p1, SV *p2) {
-
-  dTHX; /* fetch context */
-  
-  int cmp;
-  
-  dSP;
-  int count;
-
-  //ENTER;
-  //SAVETMPS;
-  
-  PUSHMARK(SP);
-  XPUSHs(sv_2mortal(newSVsv(p1)));
-  XPUSHs(sv_2mortal(newSVsv(p2)));
-  PUTBACK;
-  
-  /* Call the Perl sub to process the callback */
-  count = call_sv(callback, G_SCALAR);
-
-  SPAGAIN;
-
-  if(count != 1)
-    croak("Did not return a value\n");
-  
-  cmp = POPi;
-  PUTBACK;
-
-  //FREETMPS;
-  //LEAVE;
-
-  return cmp;
-}
+/* C-level callbacks required by the interval tree library */
 
 static SV* svclone(SV* p) {
-  dTHX; 
-  return newSVsv(p);
+  dTHX;       /* fetch context */
+
+  return SvREFCNT_inc(p);
 }
 
 void svdestroy(SV* p) {
-  dTHX; 
+  dTHX;       /* fetch context */
+
   SvREFCNT_dec(p);
 }
-
 
 /*====================================================================
  * XS SECTION                                                     
@@ -514,69 +483,224 @@ overlap(f1_start,f1_end,f2_start,f2_end)
   OUTPUT:
     RETVAL
 
-MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Tree::Interval
+MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval
 
-void
-new ( class, cmp_fn )
-    char* class
-    SV*   cmp_fn
-    PROTOTYPE: $$
-    PREINIT:
-        AVLTree* tree;
-    PPCODE:
-    {
-      SV* self;
-      HV* hash = newHV();
+Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval
+new(packname, low, high, data)
+    char* packname
+    float low
+    float high
+    SV*   data
+  PROTOTYPE: $$$
+  CODE:
+    RETVAL = interval_new(low, high, data, svclone, svdestroy);
 
-      TRACEME("Registering callback for comparison");
-      if(callback == (SV*)NULL)
-        callback = newSVsv(cmp_fn);
-      else
-        SvSetSV(callback, cmp_fn);
-    
-      TRACEME("Allocating AVL tree");      
-      tree = avltree_new(svcompare, svclone, svdestroy);
-      if(tree == NULL)
-	croak("Unable to allocate AVL tree");
-	
-      hv_store(hash, "tree", 4, newSViv(PTR2IV(tree)), 0);
-      
-      self = newRV_noinc((SV*)hash);;
-      sv_2mortal(self);
-      sv_bless(self, gv_stashpv(class, FALSE));
-     
-      PUSHs(self);
-      XSRETURN(1);
-    }
+  OUTPUT:
+    RETVAL
+
+Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval
+copy(interval)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $
+  CODE:
+    RETVAL = interval_copy(interval);
+
+  OUTPUT:
+    RETVAL
 
 int
-size (self)
-     SV* self
-     PROTOTYPE: $
-     PREINIT:
-	 AVLTree* tree;
-     CODE:
-	 // get tree pointer and invoke size method
-         SV** svp = hv_fetch((HV*)SvRV(self), "tree", 4, 0);
-         if(svp == NULL)
-	   croak("Unable to access tree\n");
-         tree = INT2PTR(AVLTree*, SvIV(*svp)); 
+overlap(i1, i2)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval i1
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval i2
+  PROTOTYPE: $$ 
+  CODE:
+    RETVAL = interval_overlap(i1, i2);
 
-         RETVAL = avltree_size(tree);
-     OUTPUT:
-         RETVAL
+  OUTPUT:
+    RETVAL
 
-void DESTROY(self)
-    SV* self
-    PROTOTYPE: $
-    PREINIT:
-        AVLTree* tree;
-    CODE:
-        TRACEME("Deleting AVL tree");
-        SV** svp = hv_fetch((HV*)SvRV(self), "tree", 4, 0);
-        if(svp == NULL)
-          croak("Unable to access tree\n");
+int
+equal(i1, i2)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval i1
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval i2
+  PROTOTYPE: $$ 
+  CODE:
+    RETVAL = interval_equal(i1, i2);
 
-        tree = INT2PTR(AVLTree*, SvIV(*svp)); 
+  OUTPUT:
+    RETVAL
 
-        avltree_delete(tree);
+float
+low(interval)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $
+  CODE:
+    RETVAL = interval->low;
+
+  OUTPUT:
+    RETVAL
+
+float
+high(interval)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $
+  CODE:
+    RETVAL = interval->high;
+
+  OUTPUT:
+    RETVAL
+
+SV*
+data(interval)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $
+  CODE:
+    RETVAL = newSVsv(interval->data);
+
+  OUTPUT:
+    RETVAL
+
+void
+DESTROY(interval)
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $
+  CODE:
+    interval_delete(interval);
+  
+MODULE = Bio::EnsEMBL::XS            PACKAGE = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable
+
+Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable
+new( class )
+    char* class
+  PROTOTYPE: $
+  CODE:
+
+    TRACEME("Allocating interval tree");
+    RETVAL = itree_new(svclone, svdestroy);
+
+    if(RETVAL == NULL) {
+      warn("Unable to allocate interval tree");
+      XSRETURN_UNDEF;
+    }
+
+  OUTPUT:
+    RETVAL
+
+Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval
+find( tree, low, high )
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
+    int low
+    int high
+  PROTOTYPE: $$$
+  PREINIT:
+    interval_t *i, *result;
+    
+  CODE:
+    i = interval_new( low, high, &PL_sv_undef, svclone, svdestroy);
+
+    result = itree_find( tree, i );
+    interval_delete(i);
+
+    if(result == NULL)
+      XSRETURN_UNDEF;
+
+    /*
+     * Return a copy of the result as this belongs to the tree
+     *
+     * WARNING
+     *
+     * Invoking interval_copy on the result generates segfault.
+     * Couldn't figure out why so far.
+     *
+     */
+    RETVAL = interval_new( result->low, result->high, result->data, svclone, svdestroy);
+
+  OUTPUT:
+    RETVAL
+
+SV*
+findall( tree, low, high )
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
+    int low
+    int high
+  PROTOTYPE: $$$
+  PREINIT:
+    AV* av_ref;
+    interval_t *i;
+    const interval_t *item;
+    ilist_t* results;
+    ilisttrav_t* trav;
+    
+  CODE:
+    i = interval_new ( low, high, &PL_sv_undef, svclone, svdestroy );
+
+    results = itree_findall ( tree, i );
+    interval_delete ( i );
+
+    /* empty results set, return undef */
+    if ( results == NULL || !ilist_size ( results ) ) {
+      ilist_delete ( results );
+      XSRETURN_UNDEF;
+    }
+
+    /* return a reference to an array of intervals */
+    av_ref = (AV*) sv_2mortal( (SV*) newAV() );
+
+    trav = ilisttrav_new( results );
+    if ( trav == NULL ) {
+      ilist_delete ( results );
+      croak("Cannot traverse results set");
+    }
+
+    for(item = ilisttrav_first(trav); item!=NULL; item=ilisttrav_next(trav)) {
+      SV* ref = newSV(0);
+      sv_setref_pv( ref, "Tree::Interval::Fast::Interval", (void*)interval_new(item->low, item->high, item->data, svclone, svdestroy) );
+      av_push(av_ref, ref);
+    }
+
+    RETVAL = newRV( (SV*) av_ref );
+    ilist_delete ( results );
+
+  OUTPUT:
+    RETVAL
+
+
+int
+insert( tree, interval )
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $$
+  CODE:
+    RETVAL = itree_insert( tree, interval );
+
+  OUTPUT:
+    RETVAL
+
+int
+remove( tree, interval )
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+  PROTOTYPE: $$
+  CODE:
+    RETVAL = itree_remove( tree, interval );
+
+  OUTPUT:
+    RETVAL
+	 
+int
+size( tree )
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
+  PROTOTYPE: $
+  CODE:
+    RETVAL = itree_size( tree );
+
+  OUTPUT:
+    RETVAL
+
+void
+DESTROY( tree )
+    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable  tree
+  PROTOTYPE: $
+  CODE:
+      TRACEME("Deleting interval tree");
+      itree_delete( tree );
