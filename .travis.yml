@@ -17,7 +17,7 @@ addons:
     - unzip
 
 before_install:
-  - git clone --branch master --depth 1 https://github.com/Ensembl/ensembl.git
+  - git clone --branch experimental/mapper_update --depth 1 https://github.com/Ensembl/ensembl.git
   - git clone -b release-1-6-924 --depth 1 https://github.com/bioperl/bioperl-live.git
 
 install:
