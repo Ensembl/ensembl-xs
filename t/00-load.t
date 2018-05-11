@@ -1,4 +1,3 @@
-#!perl -T
 # Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 # Copyright [2016-2018] EMBL-European Bioinformatics Institute
 # 
@@ -19,9 +18,9 @@ use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 1;
+use FindBin '$Bin';
 
-BEGIN {
-  use_ok( 'Bio::EnsEMBL::XS' ) || print "Bail out!\n";
-}
+use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
+use_ok( 'Bio::EnsEMBL::XS' ) || print "Bail out!\n";
 
 diag( "Loading Bio::EnsEMBL::XS $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
