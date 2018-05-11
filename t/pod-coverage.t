@@ -1,4 +1,3 @@
-#!perl -T
 # Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 # Copyright [2016-2018] EMBL-European Bioinformatics Institute
 # 
@@ -19,6 +18,9 @@ use 5.8.9;
 use strict;
 use warnings FATAL => 'all';
 use Test::More;
+use FindBin '$Bin';
+
+use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 
 # Ensure a recent version of Test::Pod::Coverage
 my $min_tpc = 1.08;

@@ -107,6 +107,30 @@ our @EXPORT = qw();
 require XSLoader;
 XSLoader::load('Bio::EnsEMBL::XS', $VERSION);
 
+=head1 METHODS
+
+=cut
+
+=head2 rearrange
+
+=cut
+
+=head2 check_ref
+
+=cut
+
+=head2 assert_ref
+
+=cut
+
+=head2 assert_numeric
+
+=cut
+
+=head2 assert_integer
+
+=cut
+
 =head1 AUTHOR
 
 Alessandro Vullo, C<< <avullo at ebi.ac.uk> >>
