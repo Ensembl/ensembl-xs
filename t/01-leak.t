@@ -18,7 +18,7 @@ use warnings FATAL => 'all';
 use FindBin '$Bin';
 
 use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-use Test::More HAS_LEAKTRACE ? (tests => 11) : (skip_all => 'require Test::LeakTrace');
+use Test::More HAS_LEAKTRACE ? (tests => 12) : (skip_all => 'require Test::LeakTrace');
 use Test::LeakTrace;
 
 use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
@@ -26,6 +26,7 @@ use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 use_ok('Bio::EnsEMBL::XS');
 use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
 use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable');
+use_ok('Bio::EnsEMBL::Utils::Interval');
 
 no_leaks_ok {
   my @args = ('-TwO' => 2,
@@ -88,7 +89,7 @@ no_leaks_ok {
   my $result = $tree->find(6., 7.);
   $result = $tree->find(1, 4);
 
-  my $results = $tree->findall(8, 11);
+  my $results = $tree->search(8, 11);
 
 } 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion/querying';
 
@@ -108,11 +109,11 @@ diag( "Testing memory leaking Bio::EnsEMBL::XS $Bio::EnsEMBL::XS::VERSION, Perl 
 
 sub make_intervals {
   return [
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(15, 20, 10),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 30, 20),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(17, 19, 30),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(5, 20, 40),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(12, 15, 50),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(30, 40, 25)
+	  Bio::EnsEMBL::Utils::Interval->new(15, 20, 10),
+	  Bio::EnsEMBL::Utils::Interval->new(10, 30, 20),
+	  Bio::EnsEMBL::Utils::Interval->new(17, 19, 30),
+	  Bio::EnsEMBL::Utils::Interval->new(5, 20, 40),
+	  Bio::EnsEMBL::Utils::Interval->new(12, 15, 50),
+	  Bio::EnsEMBL::Utils::Interval->new(30, 40, 25)
 	 ];
 }
