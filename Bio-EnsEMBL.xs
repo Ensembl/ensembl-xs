@@ -619,7 +619,7 @@ find( tree, low, high )
     RETVAL
 
 SV*
-findall( tree, low, high )
+search( tree, low, high )
     Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
     int low
     int high

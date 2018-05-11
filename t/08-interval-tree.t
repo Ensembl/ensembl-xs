@@ -87,7 +87,7 @@ is($result->data, 10, 'result data');
 
 my $results = $tree->find(1, 2);
 ok(!$results, 'no results');
-$results = $tree->findall(8, 11);
+$results = $tree->search(8, 11);
 is(scalar @$results, 2, 'result set size');
 foreach my $item (@{$results}) {
   isa_ok($item, 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
