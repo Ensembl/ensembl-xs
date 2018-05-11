@@ -18,7 +18,7 @@ use warnings FATAL => 'all';
 use FindBin '$Bin';
 
 use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-use Test::More HAS_LEAKTRACE ? (tests => 62) : (skip_all => 'require Test::LeakTrace');
+use Test::More HAS_LEAKTRACE ? (tests => 63) : (skip_all => 'require Test::LeakTrace');
 use Test::LeakTrace;
 
 use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
@@ -26,6 +26,7 @@ use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 use_ok('Bio::EnsEMBL::XS');
 use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
 use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable');
+use_ok('Bio::EnsEMBL::Utils::Interval');
 
 my $interval = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 20, [1,2,3]);
 isa_ok($interval, "Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval");
@@ -103,12 +104,12 @@ diag( "Testing Interval Tree in Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable
 
 sub make_intervals {
   return [
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(15, 20, 10),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 30, 20),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(17, 19, 30),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(5, 20, 40),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(12, 15, 50),
-	  Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(30, 40, 25)
+	  Bio::EnsEMBL::Utils::Interval->new(15, 20, 10),
+	  Bio::EnsEMBL::Utils::Interval->new(10, 30, 20),
+	  Bio::EnsEMBL::Utils::Interval->new(17, 19, 30),
+	  Bio::EnsEMBL::Utils::Interval->new(5, 20, 40),
+	  Bio::EnsEMBL::Utils::Interval->new(12, 15, 50),
+	  Bio::EnsEMBL::Utils::Interval->new(30, 40, 25)
 	 ];
 }
 
