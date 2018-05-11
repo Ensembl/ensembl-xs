@@ -36,25 +36,37 @@ $Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::VERSION = '2.3.1';
 
 =head1 METHODS
 
+=cut
+
 =head2 new
 
 Construct an empty interval tree
+
+=cut
 
 =head2 find
 
 Return an overlapping interval with the query
 
-=head2 findall
+=cut
+
+=head2 search
 
 Return all overlapping interval with the query
+
+=cut
 
 =head2 insert
 
 Insert an interval in the tree
 
+=cut
+
 =head2 remove
 
 Remove an interval from the tree
+
+=cut
 
 =head2 size
 
