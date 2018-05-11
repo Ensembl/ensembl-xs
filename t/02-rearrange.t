@@ -1,4 +1,3 @@
-#!perl -T
 # Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
 # Copyright [2016-2018] EMBL-European Bioinformatics Institute
 # 
@@ -20,8 +19,10 @@ use strict;
 use warnings FATAL => 'all';
 
 use Test::More; 
+use FindBin '$Bin';
 
-BEGIN { use_ok('Bio::EnsEMBL::XS'); }
+use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
+use_ok('Bio::EnsEMBL::XS');
 
 #
 # Test exceptions, e.g. missing arguments
