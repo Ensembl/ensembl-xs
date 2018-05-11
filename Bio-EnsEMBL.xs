@@ -702,10 +702,33 @@ insert( tree, interval )
 int
 remove( tree, interval )
     Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
-    Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval interval
+    SV* interval
   PROTOTYPE: $$
+  PREINIT:
+    interval_t *i;
+    float low, high;
+  INIT:
+    if( !(SvOK(interval) && sv_isobject(interval) && sv_isa(interval, "Bio::EnsEMBL::Utils::Interval")) )
+      croak("Need a Bio::EnsEMBL::Utils::Interval instance as parameter");
+
   CODE:
-    RETVAL = itree_remove( tree, interval );
+    SV** svp = hv_fetch((HV*)SvRV(interval), "start", 5, 0);
+    if(svp == NULL)
+      croak("Unable to access interval start field \n");
+    low = SvNV(*svp);
+
+    svp = hv_fetch((HV*)SvRV(interval), "end", 3, 0);
+    if(svp == NULL)
+      croak("Unable to access interval end field \n");
+    high = SvNV(*svp);
+
+    svp = hv_fetch((HV*)SvRV(interval), "data", 4, 0);
+    if(svp == NULL)
+      croak("Unable to access interval data field \n");
+
+    i = interval_new(low, high, *svp, svclone, svdestroy);
+    RETVAL = itree_remove( tree, i );
+    interval_delete ( i );
 
   OUTPUT:
     RETVAL
