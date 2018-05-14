@@ -17,9 +17,8 @@ use strict;
 use warnings FATAL => 'all';
 use FindBin '$Bin';
 
-use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-use Test::More HAS_LEAKTRACE ? (tests => 63) : (skip_all => 'require Test::LeakTrace');
-use Test::LeakTrace;
+use constant HAS_INTERVAL => eval{ require Bio::EnsEMBL::Utils::Interval };
+use Test::More HAS_INTERVAL ? (tests => 63) : (skip_all => 'require Bio::EnsEMBL::Utils::Interval');
 
 use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 

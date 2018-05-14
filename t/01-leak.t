@@ -18,7 +18,8 @@ use warnings FATAL => 'all';
 use FindBin '$Bin';
 
 use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-use Test::More HAS_LEAKTRACE ? (tests => 12) : (skip_all => 'require Test::LeakTrace');
+use constant HAS_INTERVAL => eval{ require Bio::EnsEMBL::Utils::Interval };
+use Test::More HAS_LEAKTRACE ? (tests => 11) : (skip_all => 'require Test::LeakTrace');
 use Test::LeakTrace;
 
 use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
@@ -26,7 +27,6 @@ use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 use_ok('Bio::EnsEMBL::XS');
 use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
 use_ok('Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable');
-use_ok('Bio::EnsEMBL::Utils::Interval');
 
 no_leaks_ok {
   my @args = ('-TwO' => 2,
@@ -46,7 +46,7 @@ no_leaks_ok {
   my $is_array = 
     eval { Bio::EnsEMBL::XS::Utils::Scalar::assert_ref({a=>1,b=>2,c=>3}, 'ARRAY'); }
 } 'Bio::EnsEMBL::XS::Utils::assert_ref';
-
+    
 no_leaks_ok {
   my $i1 = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval->new(10, 20, 10);
   my ($low, $high, $data) = ($i1->low, $i1->high, $i1->data);
@@ -70,50 +70,51 @@ no_leaks_ok {
   my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
 } 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: empty tree';
 
-my $intervals = make_intervals();
+SKIP: {
+  skip "You should install the branch experimental/mapper_update to test interval trees for leak traces",
+    3 unless HAS_INTERVAL;
 
-no_leaks_ok {
-  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
-  foreach my $interval (@{$intervals}) {
-    $tree->insert($interval);
-  }
-  $tree->size();
-} 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion';
-
-no_leaks_ok {
-  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
-  foreach my $interval (@{$intervals}) {
-    $tree->insert($interval);
-  }
-
-  my $result = $tree->find(6., 7.);
-  $result = $tree->find(1, 4);
-
-  my $results = $tree->search(8, 11);
-
-} 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion/querying';
-
-no_leaks_ok {
-  my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
-  foreach my $interval (@{$intervals}) {
-    $tree->insert($interval);
-  }
-
-  for my $i (0 .. 5) {
-    $tree->remove($intervals->[$i]);
+  my $intervals = [
+	    Bio::EnsEMBL::Utils::Interval->new(15, 20, 10),
+	    Bio::EnsEMBL::Utils::Interval->new(10, 30, 20),
+	    Bio::EnsEMBL::Utils::Interval->new(17, 19, 30),
+	    Bio::EnsEMBL::Utils::Interval->new(5, 20, 40),
+	    Bio::EnsEMBL::Utils::Interval->new(12, 15, 50),
+	    Bio::EnsEMBL::Utils::Interval->new(30, 40, 25)
+		  ];
+  
+  no_leaks_ok {
+    my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+    foreach my $interval (@{$intervals}) {
+      $tree->insert($interval);
+    }
     $tree->size();
-  }
-} 'Bio::EnsEMBL::XS::Utils::Tree::Interval: after insertion/removal';
+  } 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion';
+
+  no_leaks_ok {
+    my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+    foreach my $interval (@{$intervals}) {
+      $tree->insert($interval);
+    }
+
+    my $result = $tree->find(6., 7.);
+    $result = $tree->find(1, 4);
+
+    my $results = $tree->search(8, 11);
+
+  } 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval: tree after insertion/querying';
+
+  no_leaks_ok {
+    my $tree = Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable->new();
+    foreach my $interval (@{$intervals}) {
+      $tree->insert($interval);
+    }
+
+    for my $i (0 .. 5) {
+      $tree->remove($intervals->[$i]);
+      $tree->size();
+    }
+  } 'Bio::EnsEMBL::XS::Utils::Tree::Interval: after insertion/removal';
+}
 
 diag( "Testing memory leaking Bio::EnsEMBL::XS $Bio::EnsEMBL::XS::VERSION, Perl $], $^X" );
-
-sub make_intervals {
-  return [
-	  Bio::EnsEMBL::Utils::Interval->new(15, 20, 10),
-	  Bio::EnsEMBL::Utils::Interval->new(10, 30, 20),
-	  Bio::EnsEMBL::Utils::Interval->new(17, 19, 30),
-	  Bio::EnsEMBL::Utils::Interval->new(5, 20, 40),
-	  Bio::EnsEMBL::Utils::Interval->new(12, 15, 50),
-	  Bio::EnsEMBL::Utils::Interval->new(30, 40, 25)
-	 ];
-}
