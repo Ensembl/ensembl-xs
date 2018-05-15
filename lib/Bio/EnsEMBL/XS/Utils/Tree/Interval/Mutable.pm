@@ -32,7 +32,7 @@ package Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable;
 
 use Bio::EnsEMBL::XS; # load the XS
 
-$Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::VERSION = '2.3.1';
+$Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::VERSION = '2.3.2';
 
 =head1 METHODS
 
