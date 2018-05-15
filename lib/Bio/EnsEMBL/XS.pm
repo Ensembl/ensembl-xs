@@ -44,7 +44,7 @@ Version 1.3.1
 
 =cut
 
-our $VERSION = '2.3.1'; 
+our $VERSION = '2.3.2';
 our $ENABLE_DEBUG = 1;
 
 =head1 SYNOPSIS
