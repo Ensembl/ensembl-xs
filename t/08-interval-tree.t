@@ -18,7 +18,7 @@ use warnings FATAL => 'all';
 use FindBin '$Bin';
 
 use constant HAS_INTERVAL => eval{ require Bio::EnsEMBL::Utils::Interval };
-use Test::More HAS_INTERVAL ? (tests => 63) : (skip_all => 'require Bio::EnsEMBL::Utils::Interval');
+use Test::More HAS_INTERVAL ? (tests => 65) : (skip_all => 'require Bio::EnsEMBL::Utils::Interval');
 
 use lib "$Bin/../lib", "$Bin/../blib/lib", "$Bin/../blib/arch";
 
@@ -92,6 +92,7 @@ foreach my $item (@{$results}) {
   isa_ok($item, 'Bio::EnsEMBL::Utils::Interval');
   ok($item->start == 5 || $item->start == 10, 'search item left bound');
   ok($item->end == 20 || $item->end == 30, 'search item left bound');
+  ok($item->data == 40 || $item->data == 20, 'search item data');
 }
 
 for my $i (0 .. 5) {
