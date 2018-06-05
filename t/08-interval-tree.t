@@ -89,9 +89,9 @@ ok(!$results, 'no results');
 $results = $tree->search(8, 11);
 is(scalar @$results, 2, 'result set size');
 foreach my $item (@{$results}) {
-  isa_ok($item, 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
-  ok($item->low == 5 || $item->low == 10, 'search item left bound');
-  ok($item->high == 20 || $item->high == 30, 'search item left bound');
+  isa_ok($item, 'Bio::EnsEMBL::Utils::Interval');
+  ok($item->start == 5 || $item->start == 10, 'search item left bound');
+  ok($item->end == 20 || $item->end == 30, 'search item left bound');
 }
 
 for my $i (0 .. 5) {
