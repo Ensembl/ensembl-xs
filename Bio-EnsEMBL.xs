@@ -653,9 +653,22 @@ search( tree, low, high )
     }
 
     for(item = ilisttrav_first(trav); item!=NULL; item=ilisttrav_next(trav)) {
-      SV* ref = newSV(0);
-      sv_setref_pv( ref, "Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval", (void*)interval_new(item->low, item->high, item->data, svclone, svdestroy) );
-      av_push(av_ref, ref);
+      /*
+       * SV* ref = newSV(0);
+       * sv_setref_pv( ref, "Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval", 
+       *               (void*)interval_new(item->low, item->high, item->data, svclone, svdestroy) );
+       *
+       */
+      HV* hash = newHV();
+      hv_store( hash, "start", 5, newSVnv(item->low), 0 );
+      hv_store( hash, "end", 3, newSVnv(item->high), 0 );
+      hv_store( hash, "data", 4, newSVsv(item->data), 0 );
+      
+      SV* ref = newRV_noinc( (SV*)hash );
+      //sv_2mortal( ref );
+      sv_bless( ref, gv_stashpv("Bio::EnsEMBL::Utils::Interval", FALSE) );
+      
+      av_push( av_ref, ref );
     }
 
     RETVAL = newRV( (SV*) av_ref );
