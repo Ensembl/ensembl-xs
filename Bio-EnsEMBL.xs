@@ -586,7 +586,7 @@ new( class )
   OUTPUT:
     RETVAL
 
-Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval
+SV*
 find( tree, low, high )
     Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable tree
     int low
@@ -612,8 +612,17 @@ find( tree, low, high )
      * Invoking interval_copy on the result generates segfault.
      * Couldn't figure out why so far.
      *
+     * RETVAL = interval_new( result->low, result->high, result->data, svclone, svdestroy);
      */
-    RETVAL = interval_new( result->low, result->high, result->data, svclone, svdestroy);
+
+    /* Return an ensembl core API compatible interval as result */
+    HV* hash = newHV();
+    hv_store( hash, "start", 5, newSVnv(result->low), 0 );
+    hv_store( hash, "end", 3, newSVnv(result->high), 0 );
+    hv_store( hash, "data", 4, newSVsv(result->data), 0 );
+
+    RETVAL = newRV_noinc( (SV*)hash );
+    sv_bless( RETVAL, gv_stashpv("Bio::EnsEMBL::Utils::Interval", FALSE) );
 
   OUTPUT:
     RETVAL
@@ -665,7 +674,6 @@ search( tree, low, high )
       hv_store( hash, "data", 4, newSVsv(item->data), 0 );
       
       SV* ref = newRV_noinc( (SV*)hash );
-      //sv_2mortal( ref );
       sv_bless( ref, gv_stashpv("Bio::EnsEMBL::Utils::Interval", FALSE) );
       
       av_push( av_ref, ref );

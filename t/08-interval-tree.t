@@ -70,22 +70,23 @@ foreach my $interval (@{$intervals}) {
 is($tree->size(), 6, 'size after insert');
 
 my $result = $tree->find(6, 7);
-isa_ok($result, 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
-is($result->low, 5, 'result left bound');
-is($result->high, 20, 'result right bound');
+isa_ok($result, 'Bio::EnsEMBL::Utils::Interval');
+is($result->start, 5, 'result left bound');
+is($result->end, 20, 'result right bound');
 is($result->data, 40, 'result data');
 
 $result = $tree->find(1, 4);
 ok(!$result, 'no results');
 
 $result = $tree->find(18, 25);
-isa_ok($result, 'Bio::EnsEMBL::XS::Utils::Tree::Interval::Mutable::Interval');
-is($result->low, 15, 'result left bound');
-is($result->high, 20, 'result right bound');
+isa_ok($result, 'Bio::EnsEMBL::Utils::Interval');
+is($result->start, 15, 'result left bound');
+is($result->end, 20, 'result right bound');
 is($result->data, 10, 'result data');
 
 my $results = $tree->find(1, 2);
 ok(!$results, 'no results');
+
 $results = $tree->search(8, 11);
 is(scalar @$results, 2, 'result set size');
 foreach my $item (@{$results}) {
