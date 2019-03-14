@@ -1,4 +1,9 @@
-	
+**WARNING**: the ensembl-xs repository on GitHub has had its history rewritten
+on 2019-03-14 around 12:00 UTC. If you work with this repository you are
+advised to clone it from scratch rather than to update a clone from before
+the rewrite in order to make sure your local commit history is clean.
+
+
 			    Bio::EnsEMBL::XS
 
 			     Version 2.3.2
