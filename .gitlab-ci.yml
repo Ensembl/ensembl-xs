@@ -1,0 +1,42 @@
+#
+# Test-job template
+#
+
+.ensembl_test_template:
+  image: dockerhub.ebi.ac.uk/ensembl-infrastructure/ensembl-ci-docker-images:${PERL_VERSION}
+
+  variables:
+    USER: "gitlabci"
+
+  before_script:
+    - apt-get update
+    - apt-get install -y build-essential cpanminus git
+    - git clone --branch=master --depth=1 https://github.com/Ensembl/ensembl.git
+    - git clone --branch=release-1-6-924 --depth=1 https://github.com/bioperl/bioperl-live.git
+    - cpanm -v --installdeps --notest .
+    - cpanm -n Devel::Cover::Report::Coveralls
+    - perl Makefile.PL
+    - make
+
+#
+# Test jobs
+#
+
+test:perl5.14:
+  stage: test
+  extends: .ensembl_test_template
+  variables:
+    PERL_VERSION: "5.14"
+    COVERALLS: "false"
+  script:
+    - ./travisci/harness.sh
+
+test:perl5.30:
+  stage: test
+  extends: .ensembl_test_template
+  variables:
+    PERL_VERSION: "5.30"
+    # Note: relies on the secret variable COVERALLS_REPO_TOKEN for report uploads to work
+    COVERALLS: "true"
+  script:
+    - ./travisci/harness.sh
