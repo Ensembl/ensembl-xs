@@ -1,6 +1,6 @@
 #!perl -T
-# Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
-# Copyright [2016-2024] EMBL-European Bioinformatics Institute
+# See the NOTICE file distributed with this work for additional information
+# regarding copyright ownership.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More;
 
-plan tests => 3;
+plan tests => 4;
 
 sub not_in_file_ok {
     my ($filename, %regex) = @_;
@@ -57,13 +57,17 @@ sub module_boilerplate_ok {
 TODO: {
   local $TODO = "Need to replace the boilerplate text";
 
-  not_in_file_ok(README =>
+  not_in_file_ok('README.md' =>
     "The README is used..."       => qr/The README is used/,
     "'version information here'"  => qr/to provide version information/,
   );
 
   not_in_file_ok(Changes =>
     "placeholder date/time"       => qr(Date/time)
+  );
+
+  not_in_file_ok(NOTICE =>
+     "Copyright EMBL-EBI" => qr/Copyright \[\d+\-\d+\] EMBL-European Bioinformatics Institute/
   );
 
   module_boilerplate_ok('lib/Bio/EnsEMBL/XS.pm');

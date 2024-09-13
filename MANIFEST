@@ -2,6 +2,7 @@ Bio-EnsEMBL.xs
 Changes
 INSTALL
 LICENSE
+NOTICE
 MANIFEST			This list of files
 Makefile.PL
 README
@@ -27,6 +28,7 @@ t/05-assert_numeric.t
 t/06-assert_integer.t
 t/07-overlap.t
 t/08-interval-tree.t
+t/09-housekeeping_apache2.t
 t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
