@@ -5,7 +5,7 @@ LICENSE
 NOTICE
 MANIFEST			This list of files
 Makefile.PL
-README
+README.md
 TODO
 bin/rearrange-bench.pl
 itree/interval.c
