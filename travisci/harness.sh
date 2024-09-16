@@ -2,6 +2,7 @@
 
 ENSDIR="${ENSDIR:-$PWD}"
 
+
 export PERL5LIB=$ENSDIR/bioperl-live:$ENSDIR/ensembl/modules:$ENSDIR/ensembl-test/modules:$PWD/modules
 export TEST_AUTHOR=$USER
 
