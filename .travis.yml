@@ -1,11 +1,10 @@
-dist: trusty
+dist: focal
 
 language: perl
 
 perl:
   - '5.26'
-  - '5.14'
-  - '5.10'
+  - '5.32'
 
 env:
   global:
@@ -13,16 +12,11 @@ env:
 
 sudo: false
 
-addons:
-  apt:
-    packages:
-    - unzip
-
 before_install:
   - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl.git
-  - git clone -b release-1-6-924 --depth 1 https://github.com/bioperl/bioperl-live.git
 
 install:
+  - cpanm -v --installdeps --with-recommends --notest --cpanfile ensembl/cpanfile .
   - cpanm -v --installdeps --notest .
   - perl Makefile.PL
   - make
