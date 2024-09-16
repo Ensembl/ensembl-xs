@@ -14,9 +14,11 @@ sudo: false
 
 before_install:
   - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl.git
+  - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl-test.git
 
 install:
   - cpanm -v --installdeps --with-recommends --notest --cpanfile ensembl/cpanfile .
+  - cpanm -v --installdeps --notest --cpanfile ensembl-test/cpanfile .
   - cpanm -v --installdeps --notest .
   - perl Makefile.PL
   - make
