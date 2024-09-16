@@ -6,10 +6,6 @@ perl:
   - '5.26'
   - '5.32'
 
-env:
-  global:
-    secure: EbGoRzfTTy/nlGPRYOEhKcYnIIrUHeM5etlqdAsMrfOkCCVJe7/QIWUG7hx1qdprIPdrKZ0jnmzBO3STz5m+TrsE/rAZjTM/MyEtwxAFEsdNlOKeozyE4Y4kwFMOqiLAFhHPtd3JhV92VMj3VSGVLkhNaaXbz1kj/aU14hOhbT4=
-
 sudo: false
 
 before_install:
