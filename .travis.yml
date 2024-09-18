@@ -9,8 +9,7 @@ perl:
 sudo: false
 
 env: 
-  - COVERALLS=false
-  - ENSDIR=$TRAVIS_BUILD_DIR
+  - COVERALLS=false ENSDIR=$TRAVIS_BUILD_DIR
 
 before_install:
   - export CWD=$PWD
