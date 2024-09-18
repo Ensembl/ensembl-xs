@@ -14,3 +14,4 @@ test_requires 'Devel::Cycle';
 test_requires 'Devel::Cover';
 test_requires 'IO::String';
 test_requires 'PadWalker';
+test_requires 'Error';
