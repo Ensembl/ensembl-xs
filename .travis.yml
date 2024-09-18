@@ -19,8 +19,6 @@ before_install:
   - cd $CWD
 
 install:
-  - cpanm -v --sudo --installdeps --notest --cpanfile $TRAVIS_BUILD_DIR/ensembl/cpanfile .
-  - cpanm -v --sudo --installdeps --notest --cpanfile $TRAVIS_BUILD_DIR/ensembl-test/cpanfile .
   - cpanm -v --sudo --installdeps --notest .
   - perl Makefile.PL
   - make
