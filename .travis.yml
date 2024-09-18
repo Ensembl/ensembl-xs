@@ -6,17 +6,23 @@ perl:
   - '5.26'
   - '5.32'
 
-env:
-  global:
-    secure: EbGoRzfTTy/nlGPRYOEhKcYnIIrUHeM5etlqdAsMrfOkCCVJe7/QIWUG7hx1qdprIPdrKZ0jnmzBO3STz5m+TrsE/rAZjTM/MyEtwxAFEsdNlOKeozyE4Y4kwFMOqiLAFhHPtd3JhV92VMj3VSGVLkhNaaXbz1kj/aU14hOhbT4=
-
 sudo: false
 
+env: 
+  - COVERALLS=false
+  - ENSDIR=$TRAVIS_BUILD_DIR
+
 before_install:
+  - export CWD=$PWD
+  - cd $TRAVIS_BUILD_DIR
   - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl.git
+  - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl-test.git
+  - cd $CWD
 
 install:
-  - cpanm -v --installdeps --notest .
+  - cpanm -v --sudo --installdeps --notest --cpanfile $TRAVIS_BUILD_DIR/ensembl/cpanfile .
+  - cpanm -v --sudo --installdeps --notest --cpanfile $TRAVIS_BUILD_DIR/ensembl-test/cpanfile .
+  - cpanm -v --sudo --installdeps --notest .
   - perl Makefile.PL
   - make
 
