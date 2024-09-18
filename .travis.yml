@@ -9,11 +9,11 @@ perl:
 sudo: false
 
 env: 
-  - COVERALLS=false ENSDIR=$TRAVIS_BUILD_DIR
+  - COVERALLS=false ENSDIR=$TRAVIS_BUILD_DIR/..
 
 before_install:
   - export CWD=$PWD
-  - cd $TRAVIS_BUILD_DIR
+  - cd $ENSDIR
   - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl.git
   - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl-test.git
   - cd $CWD
